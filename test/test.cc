@@ -21,9 +21,9 @@ class Dog {
 
 void TestPrint() {
     ming::println("TestPrint");
-    ming::print("scooby doo");
-    ming::print(1024);
-    ming::print(std::vector<int> {1, 2, 3});
+    ming::println("scooby doo");
+    ming::println(1024);
+    ming::println(std::vector<int> {1, 2, 3});
     ming::println("\nPass TestPrint\n");
 }
 
