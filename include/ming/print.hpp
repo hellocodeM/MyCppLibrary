@@ -9,6 +9,8 @@
 
 namespace ming {
 namespace IO {
+
+namespace detail {
 /**
  * @desc: Print arbitrary object to stdout, including integral, C-string, object(with overloaded operator <<), C++ container.
  * @para: The object to print.
@@ -20,12 +22,14 @@ namespace IO {
  */
 template <class T> void print(const T&);
 
+void print() {};
+
 /**
  * @desc: Print arbitrary object to stdout, with a line break. 
  */
 template <class T> void println(const T&);
 
-namespace detail {
+void println() { std::cout << std::endl; };
                                                             
 template <class T>                    
 void print_impl(const T& item, std::false_type) {           

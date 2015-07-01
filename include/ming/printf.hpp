@@ -22,7 +22,7 @@ template <class T, class ...Args>
 void printf(const char* format, T x, Args... args) {
     const char* pos = strchr(format, '%');
     std::cout << std::string(format, pos);
-    ming::print(x);
+    print(x);
     printf(pos+1, args...);
 }
 
