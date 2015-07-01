@@ -29,7 +29,10 @@ void TestPrint() {
 
 void TestPrintf() {
     ming::println("TestPrintf");
-    ming::printf("object: %,\nname: %,\nage: %,\nnum: %\n", Dog("schooby"), "scooby doo", 2, std::vector<int>{1, 0, 2, 4});
+    ming::printf("object: %\n", Dog("schooby doo"));
+    ming::printf("name: %\n", "schooby doo");
+    ming::printf("age: %\n", 2);
+    ming::printf("friends: %\n", std::vector<const char*>{ "tom", "kitty", "lilly"});
     ming::println("Pass TestPrintf\n");
 }
 
