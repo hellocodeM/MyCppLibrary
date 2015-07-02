@@ -49,10 +49,33 @@ void TestHasIterator() {
         assert((std::has_iterator<int>::value == false));
     );
 }
+
 void TestIsFunctor() {
     TestCase(
         assert((std::is_functor<Functor>::value));
         assert((std::is_functor<Dog>::value == false));
+    );
+}
+
+HAS_INNERTYPE(value_type);
+HAS_INNERTYPE(const_iterator);
+
+void TestHasInnerType() {
+    TestCase(
+        assert(has_value_type<std::vector<int>>::value);
+        assert(has_value_type<int>::value == false);
+        assert(has_const_iterator<std::vector<int>>::value);
+    );
+}
+
+HAS_METHOD(size);
+HAS_METHOD(name);
+
+void TestHasMethod() {
+    TestCase(
+        assert(has_size<std::vector<int>>::value);
+        assert(has_name<Dog>::value);
+        assert(has_name<std::vector<int>>::value == false);
     );
 }
 
@@ -62,5 +85,7 @@ int main()
     TestPrintf();
     TestHasIterator();
     TestIsFunctor();
+    TestHasInnerType();
+    TestHasMethod();
     return 0;
 }

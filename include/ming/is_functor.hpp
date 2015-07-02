@@ -7,7 +7,7 @@ namespace std {
 template <class T>
 struct is_functor {
     private:
-        template <class C> static std::true_type check(decltype(&C::operator())*);
+        template <class C> static std::true_type check(decltype(&C::operator()));
         template <class C> static std::false_type check(...);
 
     public:

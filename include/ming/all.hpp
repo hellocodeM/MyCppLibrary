@@ -7,5 +7,7 @@
 #include "ExecTime.hpp"
 #include "is_functor.hpp"
 #include "TestCase.hpp"
+#include "HasMethod.hpp"
+#include "HasInnerType.hpp"
 
 #endif
