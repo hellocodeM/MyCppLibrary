@@ -12,7 +12,7 @@ namespace std {
 
         public:
         const static bool value = std::is_same<decltype(test<T>(0)), std::true_type>::value;
-        typedef std::integral_constant<bool, value> type;
+        using type = std::integral_constant<bool, value>;
     };
 }
 

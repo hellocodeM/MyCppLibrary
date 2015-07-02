@@ -5,5 +5,7 @@
 #include "printf.hpp"
 #include "has_iterator.hpp"
 #include "ExecTime.hpp"
+#include "is_functor.hpp"
+#include "TestCase.hpp"
 
 #endif
