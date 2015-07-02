@@ -26,30 +26,18 @@ namespace IO {
  * @desc: Print arbitrary object to stdout, with a line break. 
  */
 
-/**
- * Speficalization for none
- */
 void print() {
 }
 
-/**
- * Specialization for std::string
- */
 void print(const std::string& str) {
     std::cout << str;
 }
 
-/**
- * Print a object 
- */
 template <class T>
 void print(const T& x, typename std::enable_if<!std::has_iterator<T>::value>::type* = 0) {
     std::cout << x;
 }
 
-/**
- * Print a container
- */
 template <class T>
 void print(const T& x, typename std::enable_if<std::has_iterator<T>::value>::type* = 0) {
     for (auto& i : x)
