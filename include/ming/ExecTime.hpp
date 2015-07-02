@@ -11,16 +11,19 @@ namespace time {
  * @ret : Execution time in millisecond.
  */
 template <class FN>
-long ExecTime(FN f) {
+long ExecTime_(FN f) {
     clock_t start = clock();
     f();
     clock_t end = clock();
     return 1000 * (end - start) / CLOCKS_PER_SEC;
 }
 
-} /* end of namespace ming::time */
+#define ExecTime(cmd) \
+    ming::time::ExecTime_([]{ \
+        cmd; \
+    })
 
-using time::ExecTime;
+} /* end of namespace ming::time */
 } /* end of namespace ming */
 
 #endif 
