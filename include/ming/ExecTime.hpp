@@ -19,7 +19,7 @@ long ExecTime_(FN f) {
 }
 
 #define ExecTime(cmd) \
-    ming::time::ExecTime_([]{ \
+    ming::time::ExecTime_([&]{ \
         cmd; \
     })
 

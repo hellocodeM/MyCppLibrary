@@ -1,5 +1,6 @@
 #include <vector>
 #include <cassert>
+#include <algorithm>
 
 #include <ming/all.hpp>
 
@@ -26,6 +27,12 @@ struct Functor {
     }
 };
 
+void TestExecTime() {
+    TestCase(
+        std::vector<int> vec(200000);
+        ming::println(ExecTime(std::random_shuffle(vec.begin(), vec.end())));
+    );
+}
 void TestPrint() {
     TestCase(
         ming::println("scooby doo");
@@ -81,6 +88,7 @@ void TestHasMethod() {
 
 int main()
 {
+    TestExecTime();
     TestPrint();
     TestPrintf();
     TestHasIterator();
