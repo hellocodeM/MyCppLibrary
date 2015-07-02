@@ -10,8 +10,8 @@
 namespace ming {
 namespace IO {
 
-namespace detail {
 /**
+ * @name: print
  * @desc: Print arbitrary object to stdout, including integral, C-string, object(with overloaded operator <<), C++ container.
  * @para: The object to print.
  * @exam: ming::print(1024); 
@@ -20,35 +20,40 @@ namespace detail {
  *        ming::print(Dog("Scooby Doo"));
  *        ming::print(std::vector<int>{ 1, 0, 2, 4 });
  */
-template <class T> void print(const T&);
-
-void print() {};
 
 /**
+ * @name: println
  * @desc: Print arbitrary object to stdout, with a line break. 
  */
-template <class T> void println(const T&);
 
-void println() { std::cout << std::endl; };
-                                                            
-template <class T>                    
-void print_impl(const T& item, std::false_type) {           
-    std::cout << item;
+/**
+ * Speficalization for none
+ */
+void print() {
 }
 
-void print_impl(const std::string& str, std::true_type) {
+/**
+ * Specialization for std::string
+ */
+void print(const std::string& str) {
     std::cout << str;
 }
 
+/**
+ * Print a object 
+ */
 template <class T>
-void print_impl(const T& cont, std::true_type) {
-    for (auto i : cont)
-        print(i), std::cout << " ";
+void print(const T& x, typename std::enable_if<!std::has_iterator<T>::value>::type* = 0) {
+    std::cout << x;
 }
 
+/**
+ * Print a container
+ */
 template <class T>
-void print(const T& item) {
-    print_impl(item, typename std::has_iterator<T>::type());
+void print(const T& x, typename std::enable_if<std::has_iterator<T>::value>::type* = 0) {
+    for (auto& i : x)
+        print(i), print(" ");
 }
 
 template <class T>
@@ -57,10 +62,9 @@ void println(const T& item) {
     std::cout << std::endl;
 }
 
-} /* end of namespace ming::IO::detail */
 } /* end of namespace ming::IO */
 
-using IO::detail::print;
-using IO::detail::println;
+using IO::print;
+using IO::println;
 } /* end of namespace ming */
 #endif
