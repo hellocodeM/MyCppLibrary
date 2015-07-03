@@ -50,6 +50,10 @@ void println(const T& item) {
     std::cout << std::endl;
 }
 
+void println() {
+    std::cout << std::endl;
+}
+
 } /* end of namespace ming::IO */
 
 using IO::print;

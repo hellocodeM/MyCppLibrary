@@ -6,9 +6,11 @@
 #include "has_iterator.hpp"
 #include "ExecTime.hpp"
 #include "is_functor.hpp"
-#include "TestCase.hpp"
+#include "Test.hpp"
 #include "HasMethod.hpp"
 #include "HasInnerType.hpp"
 #include "placeholders.hpp"
+
+using namespace ming::placeholders;
 
 #endif

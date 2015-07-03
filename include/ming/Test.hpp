@@ -5,5 +5,7 @@
 
 #define Test \
     ming::printf("test: %\n", __func__); 
+
+#define TestBlock
         
 #endif
