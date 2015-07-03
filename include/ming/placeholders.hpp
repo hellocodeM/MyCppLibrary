@@ -5,18 +5,18 @@
 #include <utility>
 
 namespace ming {
-namespace lambda {
+namespace placeholders {
     
-struct Lambda {
+struct PlaceHolder {
 }_1;
 
 #define LAMBDA_COMMUTATIVE_OPERATOR(OP) \
     template <class T> \
-    auto operator OP (ming::lambda::Lambda l, T&& x) { \
+    auto operator OP (PlaceHolder, T&& x) { \
         return [&x](T& y) { return y OP std::forward<T>(x); }; \
     } \
     template <class T> \
-    auto operator OP (T&& x, ming::lambda::Lambda l) { \
+    auto operator OP (T&& x, PlaceHolder l) { \
         return l + x; \
     }
 
@@ -48,7 +48,7 @@ LAMBDA_COMMUTATIVE_OPERATOR(<<=)
 LAMBDA_COMMUTATIVE_OPERATOR(>>=)
 
 
-auto operator << (std::ostream& out, Lambda x) {
+auto operator << (std::ostream& out, PlaceHolder x) {
     return [&out](auto x) { out << x; };
 }
 

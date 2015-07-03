@@ -89,7 +89,8 @@ void TestHasMethod() {
 
 void TestLambda() {
     Test {
-        using namespace ming::lambda;
+        using namespace ming::placeholders;
+
         std::vector<int> vec = { 1, 2, 3 };
         const std::vector<int> ans = { 2, 3, 4 };
 
