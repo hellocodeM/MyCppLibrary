@@ -3,9 +3,14 @@
 
 #include "printf.hpp"
 
+namespace ming {
+namespace PP {
+
 #define Test \
     ming::printf("test: %\n", __func__); 
 
 #define TestBlock
         
+}
+} /* end of namespace ming::PP */
 #endif

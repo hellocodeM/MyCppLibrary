@@ -5,6 +5,9 @@
 #include <type_traits>
 #include <vector>
 
+namespace ming {
+namespace PP {
+
 #define HAS_METHOD(M) \
     template <class T> \
     struct has_##M { \
@@ -16,4 +19,6 @@
             using type = std::integral_constant<bool, value>; \
     }
 
+}
+} /* end of namespace ming::PP */
 #endif 

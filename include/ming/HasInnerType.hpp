@@ -4,6 +4,9 @@
 
 #include <type_traits>
 
+namespace ming {
+namespace PP {
+
 #define HAS_INNERTYPE(type) \
     template <class T> \
     struct has_##type { \
@@ -15,4 +18,6 @@
             using type = std::integral_constant<bool, value>; \
     }
 
+}
+} /* end of namespcae ming::PP */
 #endif
