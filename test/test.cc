@@ -91,6 +91,25 @@ void TestLambda() {
     Test {
         using namespace ming::placeholders;
 
+        /* type test */
+        int x = 1;
+        const int y = 1;
+        
+        auto add1 = _1 + 1;
+        auto addx = _1 + x;
+        auto addy = _1 + y;
+        
+        assert((add1(1) == 2));
+        assert((add1(x) == 2));
+        assert((add1(y) == 2));
+        assert((addx(1) == 2));
+        assert((addx(x) == 2));
+        assert((addx(y) == 2));
+        assert((addy(1) == 2));
+        assert((addy(x) == 2));
+        assert((addy(y) == 2));
+
+        /* functionality test  */
         std::vector<int> vec = { 1, 2, 3 };
         const std::vector<int> ans = { 2, 3, 4 };
 

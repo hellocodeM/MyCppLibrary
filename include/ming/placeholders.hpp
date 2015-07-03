@@ -13,7 +13,7 @@ struct PlaceHolder {
 #define LAMBDA_COMMUTATIVE_OPERATOR(OP) \
     template <class T> \
     auto operator OP (PlaceHolder, T&& x) { \
-        return [&x](T& y) { return y OP std::forward<T>(x); }; \
+        return [&x](auto&& y) { return y OP std::forward<T>(x); }; \
     } \
     template <class T> \
     auto operator OP (T&& x, PlaceHolder l) { \
