@@ -8,9 +8,9 @@ namespace ming {
 namespace placeholders {
     
 struct PlaceHolder {
-}_1;
+}_, _1, _2;
 
-#define LAMBDA_COMMUTATIVE_OPERATOR(OP) \
+#define LAMBDA1_COMMUTATIVE_OPERATOR(OP) \
     template <class T> \
     auto operator OP (PlaceHolder, T&& x) { \
         return [&x](auto&& y) { return y OP std::forward<T>(x); }; \
@@ -19,6 +19,20 @@ struct PlaceHolder {
     auto operator OP (T&& x, PlaceHolder l) { \
         return l + x; \
     }
+
+/**
+ * support for _2 
+ */
+
+#define LAMBDA2_COMMUTATIVE_OPERATOR(OP) \
+    auto operator OP (PlaceHolder lhs, PlaceHolder rhs) { \
+        return [](auto&& x, auto&& y) { return x + y; }; \
+    }
+
+
+#define LAMBDA_COMMUTATIVE_OPERATOR(OP) \
+    LAMBDA1_COMMUTATIVE_OPERATOR(OP) \
+    LAMBDA2_COMMUTATIVE_OPERATOR(OP)
 
 LAMBDA_COMMUTATIVE_OPERATOR(+)
 LAMBDA_COMMUTATIVE_OPERATOR(-)
@@ -48,9 +62,13 @@ LAMBDA_COMMUTATIVE_OPERATOR(<<=)
 LAMBDA_COMMUTATIVE_OPERATOR(>>=)
 
 
+/**
+ * Specialization for opeartor <<
+ */
 auto operator << (std::ostream& out, PlaceHolder x) {
     return [&out](auto&& x) { out << x; };
 }
+
 
 
 /** 
@@ -75,10 +93,6 @@ auto operator << (std::ostream& out, PlaceHolder x) {
         return expr; \
     }
 
-#define lambda3(expr) \
-    [&](auto&& _1, auto&& _2, auto&& _3) { \
-        return expr; \
-    }
 
 }
 } /* end of namespace ming::lambda */

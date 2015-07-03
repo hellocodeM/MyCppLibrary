@@ -99,6 +99,7 @@ void TestLambda() {
             auto add1 = _1 + 1;
             auto addx = _1 + x;
             auto addy = _1 + y;
+            auto add = _1 + _2;
             
             assert((add1(1) == 2));
             assert((add1(x) == 2));
@@ -109,6 +110,11 @@ void TestLambda() {
             assert((addy(1) == 2));
             assert((addy(x) == 2));
             assert((addy(y) == 2));
+
+            assert((add(1, 1) == 2));
+            assert((add(x, 1) == 2));
+            assert((add(y, 1) == 2));
+            assert((add(x, y) == 2));
         }
 
         /* functionality test  */
