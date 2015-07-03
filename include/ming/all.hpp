@@ -9,5 +9,6 @@
 #include "TestCase.hpp"
 #include "HasMethod.hpp"
 #include "HasInnerType.hpp"
+#include "lambda.hpp"
 
 #endif

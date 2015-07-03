@@ -1,0 +1,58 @@
+#ifndef MING_LAMBDA_HPP
+#define MING_LAMBDA_HPP
+
+#include <iosfwd>
+#include <utility>
+
+namespace ming {
+namespace lambda {
+    
+struct Lambda {
+}_1;
+
+#define LAMBDA_COMMUTATIVE_OPERATOR(OP) \
+    template <class T> \
+    auto operator OP (ming::lambda::Lambda l, T&& x) { \
+        return [&x](T& y) { return y OP std::forward<T>(x); }; \
+    } \
+    template <class T> \
+    auto operator OP (T&& x, ming::lambda::Lambda l) { \
+        return l + x; \
+    }
+
+LAMBDA_COMMUTATIVE_OPERATOR(+)
+LAMBDA_COMMUTATIVE_OPERATOR(-)
+LAMBDA_COMMUTATIVE_OPERATOR(*)
+LAMBDA_COMMUTATIVE_OPERATOR(/)
+LAMBDA_COMMUTATIVE_OPERATOR(%)
+LAMBDA_COMMUTATIVE_OPERATOR(+=)
+LAMBDA_COMMUTATIVE_OPERATOR(-=)
+LAMBDA_COMMUTATIVE_OPERATOR(*=)
+LAMBDA_COMMUTATIVE_OPERATOR(/=)
+LAMBDA_COMMUTATIVE_OPERATOR(%=)
+LAMBDA_COMMUTATIVE_OPERATOR(&&)
+LAMBDA_COMMUTATIVE_OPERATOR(||)
+LAMBDA_COMMUTATIVE_OPERATOR(<)
+LAMBDA_COMMUTATIVE_OPERATOR(>)
+LAMBDA_COMMUTATIVE_OPERATOR(<=)
+LAMBDA_COMMUTATIVE_OPERATOR(>=)
+LAMBDA_COMMUTATIVE_OPERATOR(!=)
+LAMBDA_COMMUTATIVE_OPERATOR(==)
+LAMBDA_COMMUTATIVE_OPERATOR(&)
+LAMBDA_COMMUTATIVE_OPERATOR(|)
+LAMBDA_COMMUTATIVE_OPERATOR(<<)
+LAMBDA_COMMUTATIVE_OPERATOR(>>)
+LAMBDA_COMMUTATIVE_OPERATOR(&=)
+LAMBDA_COMMUTATIVE_OPERATOR(|=)
+LAMBDA_COMMUTATIVE_OPERATOR(<<=)
+LAMBDA_COMMUTATIVE_OPERATOR(>>=)
+
+
+auto operator << (std::ostream& out, Lambda x) {
+    return [&out](auto x) { out << x; };
+}
+
+}
+} /* end of namespace ming::lambda */
+
+#endif 

@@ -3,10 +3,7 @@
 
 #include "printf.hpp"
 
-#define TestCase(body) \
-    do { ming::printf("test: %\n", __func__); \
-         body \
-         ming::printf("pass: %\n\n", __func__); \
-    } while(0)
-
+#define Test \
+    ming::printf("test: %\n", __func__); 
+        
 #endif
