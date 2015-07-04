@@ -194,20 +194,70 @@ void TestLambda() {
 
 void TestCascadeFunction() {
     Test {
-        ming::vector<int> vec = { 1, 2, 3};
+        /* test for operator + */
+        TestBlock {
+            ming::vector<int> vec1 = { 1, 2, 3 };
+            const ming::vector<int> vec2 = { 1, 2, 3 };
+            int x1 = 4;
+            int& x2 = x1;
+            const int& x3 = 4;
+            int&& x4 = 4;
+            
+            /* rhs is int */
+            assert((vec1 + x1 == ming::vector<int>{ 1, 2, 3, 4 }));
+            assert((vec2 + x1 == ming::vector<int>{ 1, 2, 3, 4 }));
+            assert((std::move(vec1) + x1 == ming::vector<int>{ 1, 2, 3, 4 }));
+            assert((vec1 == ming::vector<int>{ 1, 2, 3 }));
 
-        vec.foreach(_1 += 1);
-        assert((vec == ming::vector<int>{ 2, 3, 4 }));
-        
-        assert((vec.map(_1 - 1) == ming::vector<int>{ 1, 2, 3 }));
-        
-        assert((vec.fold(0, _1 + _2) == 9));
+            /* rhs is int& */
+            assert((vec1 + x2 == ming::vector<int>{ 1, 2, 3, 4 }));
+            assert((vec2 + x2 == ming::vector<int>{ 1, 2, 3, 4 }));
+            assert((std::move(vec1) + x2 == ming::vector<int>{ 1, 2, 3, 4 }));
+            assert((vec1 == ming::vector<int>{ 1, 2, 3 }));
+            
+            /* rhs is const int& */
+            assert((vec1 + x3 == ming::vector<int>{ 1, 2, 3, 4 }));
+            assert((vec2 + x3 == ming::vector<int>{ 1, 2, 3, 4 }));
+            assert((std::move(vec1) + x3 == ming::vector<int>{ 1, 2, 3, 4 }));
+            assert((vec1 == ming::vector<int>{ 1, 2, 3 }));
 
-        assert((vec.filter(_1 < 4) == ming::vector<int>{ 2, 3 }));
+            /* rhs is int&& */
+            assert((vec1 + x4 == ming::vector<int>{ 1, 2, 3, 4 }));
+            assert((vec2 + x4 == ming::vector<int>{ 1, 2, 3, 4 }));
+            assert((std::move(vec1) + std::move(x4) == ming::vector<int>{ 1, 2, 3, 4 }));
+            assert((vec1 == ming::vector<int>()));
+            
+            vec1 = { 1, 2, 3 }; /* restore vec1 */
+            /* rhs is literal */
+            assert((vec1 + 4 == ming::vector<int>{ 1, 2, 3, 4 }));
+            assert((vec2 + 4 == ming::vector<int>{ 1, 2, 3, 4 }));
+            assert((std::move(vec1) + 4 == ming::vector<int>{ 1, 2, 3, 4 }));
+            assert((vec1 == ming::vector<int>()));
+            
+        }
 
+        TestBlock {
+            ming::vector<int> vec = { 1, 2, 3};
+
+            vec.foreach(_1 += 1);
+            assert((vec == ming::vector<int>{ 2, 3, 4 }));
+            
+            assert((vec.map(_1 - 1) == ming::vector<int>{ 1, 2, 3 }));
+            
+            assert((vec.fold(0, _1 + _2) == 9));
+
+            assert((vec.filter(_1 < 4) == ming::vector<int>{ 2, 3 }));
+        }
         /* performance test */
-        vec.resize(200000);
-        ming::printf("map 200000 elements time: %", ExecTime(vec.map(_1 - 1)));
+        TestBlock {
+            ming::vector<int> vec(2000000, 1);
+            std::iota(vec.begin(), vec.end(), 1);
+
+            ming::printf("map 2000000 elements time: %\n", ExecTime(vec.map(_1 - 1)));
+            ming::printf("filter 20000000 elements time: %\n", ExecTime(vec.filter(_1 <= 10000)));
+            ming::printf("foreach 20000000 elements time: %\n", ExecTime(vec.foreach(_1 + 1)));
+            ming::printf("fold 20000000 elements time: %\n", ExecTime(vec.fold(0, _1 + _2)));
+        }
     }
 }
 int main()

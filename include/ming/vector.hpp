@@ -36,7 +36,8 @@ class vector: public std::vector<T> {
     template <class Fn>
     auto map(Fn f) {
         return fold(vector<decltype(f(base::front()))>(), [f](auto&& init, auto&& item) {
-            return std::forward<decltype(init)>(init) + std::forward<decltype(f(item))>(f(item));
+            init.push_back(f(item));
+            return std::forward<decltype(init)>(init);
         });
     }
 
@@ -46,12 +47,10 @@ class vector: public std::vector<T> {
                 if (f(item)) {
                     init.push_back(item);
                 }
-                return std::move(init);
+                return std::forward<decltype(init)>(init);
         });
     }
 
-    private:
-    
 };
 
 
