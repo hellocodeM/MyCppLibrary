@@ -263,6 +263,39 @@ void TestCascadeFunction() {
         }
     }
 }
+
+void TestContainers() {
+    Test { 
+        constexpr size_t cont_size = 100;
+        /* test for ming::vector */
+        TestBlock {
+            ming::vector<int> vec(cont_size);
+            vec.fold(0, lambda2((_2 = _1) + 1));
+
+            auto v1 = vec.map(_ * 2);
+            auto v2 = v1.map(_ * 2);
+            assert(vec == ming::range(0, cont_size));
+            assert((vec.map(_ * 2) == ming::range(0, cont_size*2, 2)));
+            assert((vec.filter(_ < 50) == ming::range(0, 50)));
+            assert((vec.take(10) == ming::range(0, 10)));
+            //assert((vec.map(_ * 2).filter(_ < 100).take(10) == ming::range(0, 22, 2)));
+            ming::println(vec.map(_ * 2).filter(_ < 100).take(10));
+            
+        }
+
+        /* test for ming::list */
+        TestBlock {
+        }
+        /* test for ming::map */
+        TestBlock {
+
+        }
+        /* test for ming::set */
+        TestBlock {
+
+        }
+    }
+}
 int main()
 {
     TestExecTime();
@@ -274,5 +307,6 @@ int main()
     TestHasMethod();
     TestLambda();
     TestCascadeFunction();
+    TestContainers();
     return 0;
 }

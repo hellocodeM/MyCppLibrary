@@ -15,7 +15,7 @@ namespace container {
 namespace ph = ming::placeholders;
 
 template <class T>
-class vector: public std::vector<T>, public Iterable<T, vector<T>>{
+class vector: public std::vector<T>, public Iterable<vector<T>>{
     public:
     using std::vector<T>::vector;
 };
@@ -25,9 +25,12 @@ class vector: public std::vector<T>, public Iterable<T, vector<T>>{
  * Helper function to create a range vector.
  */
 template <class T = vector<int>>
-T range(int from, int to) {
-    T res(to - from);
-    std::iota(res.begin(), res.end(), from);
+T range(int from, int to, int step = 1) {
+    T res;
+    while (from < to) {
+        res.push_back(from);
+        from += step;
+    }
     return res;
 }
 

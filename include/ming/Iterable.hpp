@@ -7,7 +7,7 @@
 namespace ming {
 namespace container {
 
-template <class T, class Derived>
+template <class Derived>
 class Iterable {
     public:
 
@@ -15,13 +15,31 @@ class Iterable {
         derived = static_cast<Derived*>(this);
     }
 
+    Iterable(const Iterable& rhs) {
+        derived = static_cast<Derived*>(this);
+    }
+
+    Iterable(Iterable&& rhs):
+        derived(rhs.derived) {
+        rhs.derived = nullptr;
+    }
+
+    Iterable operator = (const Iterable& rhs) {
+        derived = static_cast<Derived*>(this);
+    }
+
+    Iterable operator = (Iterable&& rhs) {
+        derived = rhs.derived;
+        rhs.derived = nullptr;
+    }
+
     template <class Init, class Fn, class Pred>
     auto fold_if(Init&& init, Fn f, Pred pred) {
-        for (auto i : *derived) {
+        for (auto&& i: *derived) {
             if (pred(i))
-                init = f(std::forward<Init>(init), i);
+                init = f(std::forward<Init>(init), std::forward<decltype(i)>(i));
         }
-        return init;
+        return std::move(init);
     }
 
     template <class Init, class Fn>
@@ -39,7 +57,7 @@ class Iterable {
 
     template <class Fn>
     auto filter(Fn f) {
-        return derived->fold_if(Derived(), [f](auto&& init, auto&& item) {
+        return derived->fold_if(Derived(), [](auto&& init, auto&& item) {
                 init.push_back(item);
                 return std::forward<decltype(init)>(init);
         }, f);

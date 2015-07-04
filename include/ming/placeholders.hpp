@@ -12,12 +12,16 @@ struct PlaceHolder {
 
 #define LAMBDA1_COMMUTATIVE_OPERATOR(OP) \
     template <class T> \
-    auto operator OP (PlaceHolder, T&& x) { \
-        return [&x](auto&& y) { return std::forward<decltype(y)>(y) OP std::forward<T>(x); }; \
+    auto operator OP (PlaceHolder, T&& rhs) { \
+        return [&rhs](auto&& lhs) {  \
+            return std::forward<decltype(lhs)>(lhs) OP std::forward<T>(rhs); \
+        }; \
     } \
     template <class T> \
-    auto operator OP (T&& x, PlaceHolder rhs) { \
-        return rhs + std::forward<T>(x); \
+    auto operator OP (T&& lhs, PlaceHolder) { \
+        return [&lhs](auto&& rhs) { \
+            return std::forward<T>(lhs) OP std::forward<decltype(rhs)>(rhs); \
+        }; \
     }
 
 /**
@@ -25,26 +29,41 @@ struct PlaceHolder {
  */
 
 #define LAMBDA2_COMMUTATIVE_OPERATOR(OP) \
-    auto operator OP (PlaceHolder lhs, PlaceHolder rhs) { \
-        return [](auto&& x, auto&& y) { \
-            return std::forward<decltype(x)>(x) + std::forward<decltype(y)>(y); }; \
+    auto operator OP (PlaceHolder, PlaceHolder) { \
+        return [](auto&& lhs, auto&& rhs) { \
+            return std::forward<decltype(lhs)>(lhs) OP std::forward<decltype(rhs)>(rhs); \
+        }; \
     }
-
 
 #define LAMBDA_COMMUTATIVE_OPERATOR(OP) \
     LAMBDA1_COMMUTATIVE_OPERATOR(OP) \
     LAMBDA2_COMMUTATIVE_OPERATOR(OP)
+
+#define LAMBDA1_UNCOMMUTATIVE_OPERATOR(OP) \
+    template <class T> \
+    auto operator OP (PlaceHolder, T&& rhs) { \
+        return [&rhs](auto&& lhs) { \
+             std::forward<decltype(lhs)>(lhs) OP std::forward<T>(rhs); \
+        }; \
+    }
+
+
+#define LAMBDA2_UNCOMMUTATIVE_OPERATOR(OP) \
+    auto operator OP (PlaceHolder, PlaceHolder) { \
+        return [](auto&& lhs, auto&& rhs) { \
+             std::forward<decltype(lhs)>(lhs) OP std::forward<decltype(rhs)>(rhs); \
+        }; \
+    }
+
+#define LAMBDA_UNCOMMUTATIVE_OPERATOR(OP) \
+        LAMBDA1_UNCOMMUTATIVE_OPERATOR(OP) \
+        LAMBDA2_UNCOMMUTATIVE_OPERATOR(OP)
 
 LAMBDA_COMMUTATIVE_OPERATOR(+)
 LAMBDA_COMMUTATIVE_OPERATOR(-)
 LAMBDA_COMMUTATIVE_OPERATOR(*)
 LAMBDA_COMMUTATIVE_OPERATOR(/)
 LAMBDA_COMMUTATIVE_OPERATOR(%)
-LAMBDA_COMMUTATIVE_OPERATOR(+=)
-LAMBDA_COMMUTATIVE_OPERATOR(-=)
-LAMBDA_COMMUTATIVE_OPERATOR(*=)
-LAMBDA_COMMUTATIVE_OPERATOR(/=)
-LAMBDA_COMMUTATIVE_OPERATOR(%=)
 LAMBDA_COMMUTATIVE_OPERATOR(&&)
 LAMBDA_COMMUTATIVE_OPERATOR(||)
 LAMBDA_COMMUTATIVE_OPERATOR(<)
@@ -57,10 +76,16 @@ LAMBDA_COMMUTATIVE_OPERATOR(&)
 LAMBDA_COMMUTATIVE_OPERATOR(|)
 LAMBDA_COMMUTATIVE_OPERATOR(<<)
 LAMBDA_COMMUTATIVE_OPERATOR(>>)
-LAMBDA_COMMUTATIVE_OPERATOR(&=)
-LAMBDA_COMMUTATIVE_OPERATOR(|=)
-LAMBDA_COMMUTATIVE_OPERATOR(<<=)
-LAMBDA_COMMUTATIVE_OPERATOR(>>=)
+
+LAMBDA_UNCOMMUTATIVE_OPERATOR(&=)
+LAMBDA_UNCOMMUTATIVE_OPERATOR(|=)
+LAMBDA_UNCOMMUTATIVE_OPERATOR(<<=)
+LAMBDA_UNCOMMUTATIVE_OPERATOR(>>=)
+LAMBDA_UNCOMMUTATIVE_OPERATOR(+=)
+LAMBDA_UNCOMMUTATIVE_OPERATOR(-=)
+LAMBDA_UNCOMMUTATIVE_OPERATOR(*=)
+LAMBDA_UNCOMMUTATIVE_OPERATOR(/=)
+LAMBDA_UNCOMMUTATIVE_OPERATOR(%=)
 
 
 /**
