@@ -13,19 +13,25 @@ namespace container {
 
 namespace ph = ming::placeholders;
 
+
 template <class T>
 class vector: public std::vector<T> {
     using std::vector<T>::vector;
-    using base = typename std::vector<T>::vector;
+    using base = typename std::vector<T>;
 
     public:
-    
-    template <class Init, class Fn>
-    auto fold(Init&& init, Fn f) {
+    template <class Init, class Fn, class Pred>
+    auto fold_if(Init&& init, Fn f, Pred pred) {
         for (auto i = base::begin(); i != base::end(); ++i) {
-            init = f(std::forward<Init>(init), *i);
+            if (pred(*i))
+                init = f(std::forward<Init>(init), *i);
         }
         return init;
+    }
+
+    template <class Init, class Fn>
+    auto fold(Init&& init, Fn f) {
+        return fold_if(std::forward<Init>(init), f, [](auto&& x){ return true;});
     }
 
     template <class Fn>
@@ -35,7 +41,7 @@ class vector: public std::vector<T> {
 
     template <class Fn>
     auto map(Fn f) {
-        return fold(vector<decltype(f(base::front()))>(), [f](auto&& init, auto&& item) {
+        return fold(vector<typename base::value_type>(), [f](auto&& init, auto&& item) {
             init.push_back(f(item));
             return std::forward<decltype(init)>(init);
         });
@@ -43,14 +49,18 @@ class vector: public std::vector<T> {
 
     template <class Fn>
     auto filter(Fn f) {
-        return fold(vector<typename base::value_type>(), [f](auto&& init, auto&& item) {
-                if (f(item)) {
-                    init.push_back(item);
-                }
-                return std::forward<decltype(init)>(init);
-        });
+        return fold_if(vector<typename base::value_type>(), [f](auto&& init, auto&& item) {
+            init.push_back(item);
+            return std::forward<decltype(init)>(init);
+        }, f);
     }
 
+    auto take(size_t n) {
+        const size_t copy_cnt = std::min(n, base::size());
+        vector<typename base::value_type> res(copy_cnt);
+        std::copy_n(base::begin(), copy_cnt, res.begin());
+        return res;
+    }
 };
 
 

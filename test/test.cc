@@ -247,6 +247,9 @@ void TestCascadeFunction() {
             assert((vec.fold(0, _1 + _2) == 9));
 
             assert((vec.filter(_1 < 4) == ming::vector<int>{ 2, 3 }));
+
+            assert((vec.take(2) == ming::vector<int>{ 2, 3 }));
+            assert((vec.take(100) == ming::vector<int>{ 2, 3, 4 }));
         }
         /* performance test */
         TestBlock {
