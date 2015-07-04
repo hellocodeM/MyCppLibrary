@@ -13,11 +13,11 @@ struct PlaceHolder {
 #define LAMBDA1_COMMUTATIVE_OPERATOR(OP) \
     template <class T> \
     auto operator OP (PlaceHolder, T&& x) { \
-        return [&x](auto&& y) { return y OP std::forward<T>(x); }; \
+        return [&x](auto&& y) { return std::forward<decltype(y)>(y) OP std::forward<T>(x); }; \
     } \
     template <class T> \
-    auto operator OP (T&& x, PlaceHolder l) { \
-        return l + x; \
+    auto operator OP (T&& x, PlaceHolder rhs) { \
+        return rhs + std::forward<T>(x); \
     }
 
 /**
@@ -26,7 +26,8 @@ struct PlaceHolder {
 
 #define LAMBDA2_COMMUTATIVE_OPERATOR(OP) \
     auto operator OP (PlaceHolder lhs, PlaceHolder rhs) { \
-        return [](auto&& x, auto&& y) { return x + y; }; \
+        return [](auto&& x, auto&& y) { \
+            return std::forward<decltype(x)>(x) + std::forward<decltype(y)>(y); }; \
     }
 
 
@@ -66,7 +67,7 @@ LAMBDA_COMMUTATIVE_OPERATOR(>>=)
  * Specialization for opeartor <<
  */
 auto operator << (std::ostream& out, PlaceHolder x) {
-    return [&out](auto&& x) { out << x; };
+    return [&out](auto&& x) { out << std::forward<decltype(x)>(x); };
 }
 
 

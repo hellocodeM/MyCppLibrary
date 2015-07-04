@@ -10,6 +10,7 @@
 #include "HasMethod.hpp"
 #include "HasInnerType.hpp"
 #include "placeholders.hpp"
+#include "vector.hpp"
 
 using namespace ming::placeholders;
 

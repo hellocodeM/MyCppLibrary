@@ -183,12 +183,33 @@ void TestLambda() {
 
             std::sort(vec.begin(), vec.end(), lambda2(_1 > _2));
             assert((vec == std::vector<int>{ 4, 3, 2}));
+
+            std::for_each(vec.begin(), vec.end(), lambda(ming::println(_)));
+            std::for_each(vec.begin(), vec.end(), lambda(printf("%d\n", _)));
         }
         
     }
     
 }
 
+void TestCascadeFunction() {
+    Test {
+        ming::vector<int> vec = { 1, 2, 3};
+
+        vec.foreach(_1 += 1);
+        assert((vec == ming::vector<int>{ 2, 3, 4 }));
+        
+        assert((vec.map(_1 - 1) == ming::vector<int>{ 1, 2, 3 }));
+        
+        assert((vec.fold(0, _1 + _2) == 9));
+
+        assert((vec.filter(_1 < 4) == ming::vector<int>{ 2, 3 }));
+
+        /* performance test */
+        vec.resize(200000);
+        ming::printf("map 200000 elements time: %", ExecTime(vec.map(_1 - 1)));
+    }
+}
 int main()
 {
     TestExecTime();
@@ -199,6 +220,6 @@ int main()
     TestHasInnerType();
     TestHasMethod();
     TestLambda();
-    
+    TestCascadeFunction();
     return 0;
 }
