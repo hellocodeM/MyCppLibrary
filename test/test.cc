@@ -1,6 +1,7 @@
 #include <vector>
 #include <cassert>
 #include <algorithm>
+#include <list>
 
 #include <ming/all.hpp>
 
@@ -287,10 +288,37 @@ void TestContainers() {
             assert((ming::range(0, 100).take(50).take(20).take(10) == ming::range(0, 10)));
             /* compound */
             assert((ming::range(0, 100).filter(lambda(_ % 2 == 0)).map(_ / 2).fold(0, _ + _) == 1225));
+            /* head, tail */
+            assert((ming::range(0, 100).tail().head() == 1));
+            
         }
 
         /* test for ming::list */
         TestBlock {
+            using cont = ming::list<int>;
+            auto range = [](int from, int to, int step = 1) { 
+                return ming::range<cont>(from, to, step);
+            };
+
+            cont con(cont_size);
+            con.fold(0, lambda2((_2 = _1) + 1));
+            /* single mode */
+            assert(con == range(0, cont_size, 1));
+            assert((con.map(_ * 2) == range(0, cont_size*2, 2)));
+            assert((con.filter(_ < 50) == range(0, 50, 1)));
+            assert((con.take(10) == range(0, 10, 1)));
+            /* cascade map */
+            assert((range(0, 10).map(_ * 2).map(_ * 2).map(_ * 2) == range(0, 80, 8)));
+            /* cascade fold */
+            assert((range(0, 10).fold(ming::vector<int>(), lambda2((_1.push_back(_2 * 2), _1))).fold(0, _ + _) == 90));
+            /* cascade filter */
+            assert((range(0, 100).filter(lambda(_ % 2 == 0)).filter(lambda(_ % 3 == 0)) == range(0, 100, 6)));
+            /* cascade take */
+            assert((range(0, 100).take(50).take(20).take(10) == range(0, 10)));
+            /* compound */
+            assert((range(0, 100).filter(lambda(_ % 2 == 0)).map(_ / 2).fold(0, _ + _) == 1225));
+            /* head, tail */
+            assert((range(0, 100).tail().head() == 1));
         }
         /* test for ming::map */
         TestBlock {

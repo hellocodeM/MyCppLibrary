@@ -48,11 +48,22 @@ class Iterable {
 
     template <class Init, class Fn>
     constexpr auto fold(Init&& init, Fn f) {
-        return fold_if(std::forward<Init>(init), f, [](auto&& x){ return true; });
+        return derived->fold_if(std::forward<Init>(init), f, [](auto&& x){ return true; });
+    }
+
+
+    template<class Fn>
+    constexpr auto map(Fn f) {
+        using item_type = decltype(f(head()));
+        using container_type = typename Derived::template container<item_type>::type;
+        return derived->fold(container_type(), [f](auto&& init, auto&& item) {
+            init.push_back(f(std::forward<decltype(item)>(item)));
+            return std::forward<decltype(init)>(init);
+            });
     }
 
     template <class Fn>
-    auto filter(Fn f) {
+    constexpr auto filter(Fn f) {
         return derived->fold_if(Derived(), [](auto&& init, auto&& item) {
                 init.push_back(item);
                 return std::forward<decltype(init)>(init);
@@ -63,6 +74,23 @@ class Iterable {
     void foreach(Fn f) {
         for (auto&& i: *derived)
             f(std::forward<decltype(i)>(i));
+    }
+
+    constexpr auto take(size_t n) const {
+        const size_t copy_cnt = std::min(n, derived->size());
+        Derived res(copy_cnt);
+        std::copy_n(derived->begin(), copy_cnt, res.begin());
+        return std::move(res);
+    }
+
+    constexpr auto head() const {
+        return derived->front();
+    }
+
+    constexpr auto tail() const {
+        Derived res(derived->size() - 1);
+        std::copy(std::next(derived->begin()), derived->end(), res.begin());
+        return std::move(res);
     }
 
     private:

@@ -12,8 +12,6 @@
 namespace ming {
 namespace container {
 
-namespace ph = ming::placeholders;
-
 template <class T>
 class vector: public std::vector<T>, public Iterable<vector<T>>{
     public:
@@ -21,42 +19,15 @@ class vector: public std::vector<T>, public Iterable<vector<T>>{
     using base = std::vector<T>;
     using iterable = Iterable<vector<T>>;
 
-
-
-    template <class Fn>
-    constexpr auto map(Fn f) {
-        return iterable::fold(vector<decltype(f(base::front()))>(), [f](auto&& init, auto&& item) {
-                init.push_back(f(std::forward<decltype(item)>(item)));
-                return std::forward<decltype(init)>(init);
-                });
-    }
-
-
-    constexpr auto take(size_t n) {
-        const size_t copy_cnt = std::min(n, base::size());
-        vector<T> res(copy_cnt);
-        std::copy_n(base::begin(), copy_cnt, res.begin());
-        return std::move(res);
-    }
-
-    constexpr T head() {
-        return base::front();
-    }
+    /**
+     * Used for obtain another container with type U.
+     */
+    template <class U>
+    struct container {
+        using type = vector<U>;
+    };
 };
 
-
-/**
- * Helper function to create a range vector.
- */
-template <class T = vector<int>>
-T range(int from, int to, int step = 1) {
-    T res;
-    while (from < to) {
-        res.push_back(from);
-        from += step;
-    }
-    return res;
-}
 
 /**
  * Overloading for operator +, which could append a item after the vector, and return the new vector.
@@ -88,7 +59,6 @@ auto operator + (T&& item, vector<T>&& vec) {
 } /* end of namespace ming::container */
 
 using container::vector;
-using container::range;
 } /* end of namespace ming */
 
 #endif

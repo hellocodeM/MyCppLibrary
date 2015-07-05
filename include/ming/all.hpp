@@ -11,6 +11,8 @@
 #include "HasInnerType.hpp"
 #include "placeholders.hpp"
 #include "vector.hpp"
+#include "list.hpp"
+#include "range.hpp"
 
 using namespace ming::placeholders;
 
