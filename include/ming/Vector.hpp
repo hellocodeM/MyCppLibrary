@@ -1,39 +1,39 @@
-#ifndef MING_CONTAINER_SET_HPP
-#define MING_CONTAINER_SET_HPP
+#ifndef MING_CONTAINER_VECTOR_HPP
+#define MING_CONTAINER_VECTOR_HPP
 
-#include <set>
+#include <vector>
 
 #include "Iterable.hpp"
-#include "range.hpp"
 
 namespace ming {
 namespace container {
 
 template <class T>
-class set: public std::set<T>, public Iterable<set<T>> {
+class Vector: public std::vector<T>, public Iterable<Vector<T>>{
     public:
-    using std::set<T>::set;
-    using base = std::set<T>;
-    using iterable = Iterable<set<T>>;
+    using std::vector<T>::vector;
+    using base = std::vector<T>;
+    using iterable = Iterable<Vector<T>>;
 
     /**
      * Used for obtain another container with type U.
      */
     template <class U>
     struct container {
-        using type = set<U>;
+        using type = Vector<U>;
     };
 
     /**
      * Add element.
      */
-    
     void add(const T& elem) {
-        base::insert(elem);
+        base::push_back(elem);
     }
 };
+
 } /* end of namespace ming::container */
 
-using container::set;
+using container::Vector;
 } /* end of namespace ming */
+
 #endif

@@ -9,19 +9,19 @@ namespace ming {
 namespace container {
 
 template <class T>
-class list: public std::list<T>, public Iterable<list<T>> {
+class List: public std::list<T>, public Iterable<List<T>> {
     public:
 
     using std::list<T>::list;
     using base = std::list<T>;
-    using iterable = Iterable<list<T>>;
+    using iterable = Iterable<List<T>>;
 
     /**
      * Used for obtain another container with type U.
      */
     template <class U>
     struct container {
-        using type = list<U>;
+        using type = List<U>;
     };
 
     void add(const T& elem) {
@@ -32,6 +32,6 @@ class list: public std::list<T>, public Iterable<list<T>> {
 
 } /* end of namespace ming::container */
 
-using container::list;
+using container::List;
 } /* end of namespace ming */
 #endif 

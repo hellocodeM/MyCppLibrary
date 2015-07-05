@@ -196,66 +196,24 @@ void TestLambda() {
 
 void TestCascadeFunction() {
     Test {
-        /* test for operator + */
         TestBlock {
-            ming::vector<int> vec1 = { 1, 2, 3 };
-            const ming::vector<int> vec2 = { 1, 2, 3 };
-            int x1 = 4;
-            int& x2 = x1;
-            const int& x3 = 4;
-            int&& x4 = 4;
-            
-            /* rhs is int */
-            assert((vec1 + x1 == ming::vector<int>{ 1, 2, 3, 4 }));
-            assert((vec2 + x1 == ming::vector<int>{ 1, 2, 3, 4 }));
-            assert((std::move(vec1) + x1 == ming::vector<int>{ 1, 2, 3, 4 }));
-            assert((vec1 == ming::vector<int>{ 1, 2, 3 }));
-
-            /* rhs is int& */
-            assert((vec1 + x2 == ming::vector<int>{ 1, 2, 3, 4 }));
-            assert((vec2 + x2 == ming::vector<int>{ 1, 2, 3, 4 }));
-            assert((std::move(vec1) + x2 == ming::vector<int>{ 1, 2, 3, 4 }));
-            assert((vec1 == ming::vector<int>{ 1, 2, 3 }));
-            
-            /* rhs is const int& */
-            assert((vec1 + x3 == ming::vector<int>{ 1, 2, 3, 4 }));
-            assert((vec2 + x3 == ming::vector<int>{ 1, 2, 3, 4 }));
-            assert((std::move(vec1) + x3 == ming::vector<int>{ 1, 2, 3, 4 }));
-            assert((vec1 == ming::vector<int>{ 1, 2, 3 }));
-
-            /* rhs is int&& */
-            assert((vec1 + x4 == ming::vector<int>{ 1, 2, 3, 4 }));
-            assert((vec2 + x4 == ming::vector<int>{ 1, 2, 3, 4 }));
-            assert((std::move(vec1) + std::move(x4) == ming::vector<int>{ 1, 2, 3, 4 }));
-            assert((vec1 == ming::vector<int>()));
-            
-            vec1 = { 1, 2, 3 }; /* restore vec1 */
-            /* rhs is literal */
-            assert((vec1 + 4 == ming::vector<int>{ 1, 2, 3, 4 }));
-            assert((vec2 + 4 == ming::vector<int>{ 1, 2, 3, 4 }));
-            assert((std::move(vec1) + 4 == ming::vector<int>{ 1, 2, 3, 4 }));
-            assert((vec1 == ming::vector<int>()));
-            
-        }
-
-        TestBlock {
-            ming::vector<int> vec = { 1, 2, 3};
+            ming::Vector<int> vec = { 1, 2, 3};
 
             vec.foreach(_1 += 1);
-            assert((vec == ming::vector<int>{ 2, 3, 4 }));
+            assert((vec == ming::Vector<int>{ 2, 3, 4 }));
             
-            assert((vec.map(_1 - 1) == ming::vector<int>{ 1, 2, 3 }));
+            assert((vec.map(_1 - 1) == ming::Vector<int>{ 1, 2, 3 }));
             
             assert((vec.fold(0, _1 + _2) == 9));
 
-            assert((vec.filter(_1 < 4) == ming::vector<int>{ 2, 3 }));
+            assert((vec.filter(_1 < 4) == ming::Vector<int>{ 2, 3 }));
 
-            assert((vec.take(2) == ming::vector<int>{ 2, 3 }));
-            assert((vec.take(100) == ming::vector<int>{ 2, 3, 4 }));
+            assert((vec.take(2) == ming::Vector<int>{ 2, 3 }));
+            assert((vec.take(100) == ming::Vector<int>{ 2, 3, 4 }));
         }
         /* performance test */
         TestBlock {
-            ming::vector<int> vec(2000000, 1);
+            ming::Vector<int> vec(2000000, 1);
             std::iota(vec.begin(), vec.end(), 1);
 
             ming::printf("map 2000000 elements time: %\n", ExecTime(vec.map(_1 - 1)));
@@ -272,12 +230,13 @@ void TestIsPair() {
         assert((std::is_pair<std::pair<int, int>>::value == true));
     }
 }
+
 void TestContainers() {
     Test { 
         constexpr size_t cont_size = 100;
         /* test for ming::vector */
         TestBlock {
-            ming::vector<int> vec(cont_size);
+            ming::Vector<int> vec(cont_size);
             vec.fold(0, lambda2((_2 = _1) + 1));
 
             /* single mode */
@@ -288,7 +247,7 @@ void TestContainers() {
             /* cascade map */
             assert((ming::range(0, 10).map(_ * 2).map(_ * 2).map(_ * 2) == ming::range(0, 80, 8)));
             /* cascade fold */
-            assert((ming::range(0, 10).fold(ming::vector<int>(), lambda2((_1.push_back(_2 * 2), _1))).fold(0, _ + _) == 90));
+            assert((ming::range(0, 10).fold(ming::Vector<int>(), lambda2((_1.push_back(_2 * 2), _1))).fold(0, _ + _) == 90));
             /* cascade filter */
             assert((ming::range(0, 100).filter(lambda(_ % 2 == 0)).filter(lambda(_ % 3 == 0)) == ming::range(0, 100, 6)));
             /* cascade take */
@@ -302,7 +261,7 @@ void TestContainers() {
 
         /* test for ming::list */
         TestBlock {
-            using cont = ming::list<int>;
+            using cont = ming::List<int>;
             auto range = [](int from, int to, int step = 1) { 
                 return ming::range<cont>(from, to, step);
             };
@@ -317,7 +276,7 @@ void TestContainers() {
             /* cascade map */
             assert((range(0, 10).map(_ * 2).map(_ * 2).map(_ * 2) == range(0, 80, 8)));
             /* cascade fold */
-            assert((range(0, 10).fold(ming::vector<int>(), lambda2((_1.push_back(_2 * 2), _1))).fold(0, _ + _) == 90));
+            assert((range(0, 10).fold(ming::List<int>(), lambda2((_1.push_back(_2 * 2), _1))).fold(0, _ + _) == 90));
             /* cascade filter */
             assert((range(0, 100).filter(lambda(_ % 2 == 0)).filter(lambda(_ % 3 == 0)) == range(0, 100, 6)));
             /* cascade take */
@@ -329,7 +288,7 @@ void TestContainers() {
         }
         /* test for ming::set */
         TestBlock {
-            using container = ming::set<int>;
+            using container = ming::Set<int>;
             auto range = [](int from, int to, int step = 1) {
                 return ming::range<container>(from, to, step);
             };
@@ -345,7 +304,7 @@ void TestContainers() {
             /* cascade map */
             assert((range(0, 10).map(_ * 2).map(_ * 2).map(_ * 2) == range(0, 80, 8)));
             /* cascade fold */
-            assert((range(0, 10).fold(ming::vector<int>(), lambda2((_1.push_back(_2 * 2), _1))).fold(0, _ + _) == 90));
+            assert((range(0, 10).fold(ming::Set<int>(), lambda2((_1.add(_2 * 2), _1))).fold(0, _ + _) == 90));
             /* cascade filter */
             assert((range(0, 100).filter(lambda(_ % 2 == 0)).filter(lambda(_ % 3 == 0)) == range(0, 100, 6)));
             /* cascade take */
@@ -366,7 +325,7 @@ void TestContainers() {
             /* map to another map */
             assert((con.map(lambda(std::make_pair(_.first, _.second * 2))) == ans));
             /* map to a vector */
-            assert((con.map(lambda(_.second * 2)) == ming::vector<int>{4, 8, 12}));
+            assert((con.map(lambda(_.second * 2)) == ming::Vector<int>{4, 8, 12}));
             /* cascade map */
             auto convert1 = [](auto&& pair) { return std::make_pair(pair.first, pair.second * 2); };
             auto convert2 = [](auto&& pair) { return std::make_pair(pair.first, pair.second / 2); };

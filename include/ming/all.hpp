@@ -11,11 +11,12 @@
 #include "HasMethod.hpp"
 #include "HasInnerType.hpp"
 #include "placeholders.hpp"
-#include "vector.hpp"
-#include "list.hpp"
-#include "set.hpp"
+
+#include "Vector.hpp"
+#include "List.hpp"
+#include "Set.hpp"
 #include "range.hpp"
-#include "map.hpp"
+#include "Map.hpp"
 
 using namespace ming::placeholders;
 

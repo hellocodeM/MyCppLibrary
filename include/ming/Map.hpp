@@ -6,7 +6,7 @@
 
 #include "Iterable.hpp"
 #include "is_pair.hpp"
-#include "vector.hpp"
+#include "Vector.hpp"
 
 namespace ming {
 namespace container {
@@ -43,7 +43,7 @@ class Map<std::pair<K, V>>: public std::map<K, V>, public Iterable<Map<std::pair
         using container_type = typename std::conditional<
                                             std::is_pair<result_type>::value, 
                                             Map<result_type>, 
-                                            vector<result_type>>::type;
+                                            Vector<result_type>>::type;
         return iterable::fold(container_type(), [f](auto&& init, auto&& elem) {
                 init.add(f(std::forward<decltype(elem)>(elem)));
                 return std::forward<decltype(init)>(init);
