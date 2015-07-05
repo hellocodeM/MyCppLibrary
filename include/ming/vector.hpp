@@ -18,6 +18,30 @@ template <class T>
 class vector: public std::vector<T>, public Iterable<vector<T>>{
     public:
     using std::vector<T>::vector;
+    using base = std::vector<T>;
+    using iterable = Iterable<vector<T>>;
+
+
+
+    template <class Fn>
+    constexpr auto map(Fn f) {
+        return iterable::fold(vector<decltype(f(base::front()))>(), [f](auto&& init, auto&& item) {
+                init.push_back(f(std::forward<decltype(item)>(item)));
+                return std::forward<decltype(init)>(init);
+                });
+    }
+
+
+    constexpr auto take(size_t n) {
+        const size_t copy_cnt = std::min(n, base::size());
+        vector<T> res(copy_cnt);
+        std::copy_n(base::begin(), copy_cnt, res.begin());
+        return std::move(res);
+    }
+
+    constexpr T head() {
+        return base::front();
+    }
 };
 
 

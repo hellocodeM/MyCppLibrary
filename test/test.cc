@@ -272,15 +272,21 @@ void TestContainers() {
             ming::vector<int> vec(cont_size);
             vec.fold(0, lambda2((_2 = _1) + 1));
 
-            auto v1 = vec.map(_ * 2);
-            auto v2 = v1.map(_ * 2);
+            /* single mode */
             assert(vec == ming::range(0, cont_size));
             assert((vec.map(_ * 2) == ming::range(0, cont_size*2, 2)));
             assert((vec.filter(_ < 50) == ming::range(0, 50)));
             assert((vec.take(10) == ming::range(0, 10)));
-            //assert((vec.map(_ * 2).filter(_ < 100).take(10) == ming::range(0, 22, 2)));
-            ming::println(vec.map(_ * 2).filter(_ < 100).take(10));
-            
+            /* cascade map */
+            assert((ming::range(0, 10).map(_ * 2).map(_ * 2).map(_ * 2) == ming::range(0, 80, 8)));
+            /* cascade fold */
+            assert((ming::range(0, 10).fold(ming::vector<int>(), lambda2((_1.push_back(_2 * 2), _1))).fold(0, _ + _) == 90));
+            /* cascade filter */
+            assert((ming::range(0, 100).filter(lambda(_ % 2 == 0)).filter(lambda(_ % 3 == 0)) == ming::range(0, 100, 6)));
+            /* cascade take */
+            assert((ming::range(0, 100).take(50).take(20).take(10) == ming::range(0, 10)));
+            /* compound */
+            assert((ming::range(0, 100).filter(lambda(_ % 2 == 0)).map(_ / 2).fold(0, _ + _) == 1225));
         }
 
         /* test for ming::list */
