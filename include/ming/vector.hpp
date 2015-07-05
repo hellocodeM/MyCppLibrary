@@ -28,7 +28,6 @@ class vector: public std::vector<T>, public Iterable<vector<T>>{
     };
 };
 
-
 /**
  * Overloading for operator +, which could append a item after the vector, and return the new vector.
  */
