@@ -15,7 +15,7 @@ Some useful codes and tools I wrote and used in everyday life.
   - ExecTime
 
 - ming::placeholders
-  - placeholder _1
+  - placeholders 
   - lambda
 
 - ming::PP
@@ -24,4 +24,8 @@ Some useful codes and tools I wrote and used in everyday life.
   - HasMethod
   - HasInnerType
 
-
+- ming::container
+  - Iterable
+  - list
+  - vector
+  - range

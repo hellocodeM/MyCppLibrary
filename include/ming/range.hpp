@@ -13,7 +13,7 @@ template <class T = vector<int>>
 T range(int from, int to, int step = 1) {
     T res;
     while (from < to) {
-        res.push_back(from);
+        res.add(from);
         from += step;
     }
     return res;

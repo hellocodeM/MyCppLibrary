@@ -26,6 +26,13 @@ class vector: public std::vector<T>, public Iterable<vector<T>>{
     struct container {
         using type = vector<U>;
     };
+
+    /**
+     * Add element.
+     */
+    void add(const T& elem) {
+        base::push_back(elem);
+    }
 };
 
 /**

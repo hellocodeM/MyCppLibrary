@@ -23,6 +23,10 @@ class list: public std::list<T>, public Iterable<list<T>> {
     struct container {
         using type = list<U>;
     };
+
+    void add(const T& elem) {
+        base::push_back(elem);
+    }
 };
 
 

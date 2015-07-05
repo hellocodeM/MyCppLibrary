@@ -40,6 +40,7 @@ void TestPrint() {
         ming::println("scooby doo");
         ming::println(1024);
         ming::println(std::vector<int> {1, 2, 3});
+        ming::println(std::make_pair(1, 2));
     }
 }
 
@@ -265,6 +266,12 @@ void TestCascadeFunction() {
     }
 }
 
+void TestIsPair() {
+    Test {
+        assert((std::is_pair<int>::value == false));
+        assert((std::is_pair<std::pair<int, int>>::value == true));
+    }
+}
 void TestContainers() {
     Test { 
         constexpr size_t cont_size = 100;
@@ -320,13 +327,57 @@ void TestContainers() {
             /* head, tail */
             assert((range(0, 100).tail().head() == 1));
         }
-        /* test for ming::map */
-        TestBlock {
-
-        }
         /* test for ming::set */
         TestBlock {
+            using container = ming::set<int>;
+            auto range = [](int from, int to, int step = 1) {
+                return ming::range<container>(from, to, step);
+            };
 
+            container con;
+            for (int i = 0; i < 100; i++)
+                con.insert(i);
+            /* single mode */
+            assert(con == range(0, cont_size, 1));
+            assert((con.map(_ * 2) == range(0, cont_size*2, 2)));
+            assert((con.filter(_ < 50) == range(0, 50, 1)));
+            assert((con.take(10) == range(0, 10, 1)));
+            /* cascade map */
+            assert((range(0, 10).map(_ * 2).map(_ * 2).map(_ * 2) == range(0, 80, 8)));
+            /* cascade fold */
+            assert((range(0, 10).fold(ming::vector<int>(), lambda2((_1.push_back(_2 * 2), _1))).fold(0, _ + _) == 90));
+            /* cascade filter */
+            assert((range(0, 100).filter(lambda(_ % 2 == 0)).filter(lambda(_ % 3 == 0)) == range(0, 100, 6)));
+            /* cascade take */
+            assert((range(0, 100).take(50).take(20).take(10) == range(0, 10)));
+            /* compound */
+            assert((range(0, 100).filter(lambda(_ % 2 == 0)).map(_ / 2).fold(0, _ + _) == 1225));
+            /* head, tail */
+            assert((range(0, 100).tail().head() == 1));
+        }
+        /* test for ming::map */
+        TestBlock {
+            using pair_type = std::pair<int, int>;
+            using container = ming::Map<pair_type>;
+
+            container con = { { 1, 2}, { 3, 4}, { 5, 6 } };
+            container ans = { {1, 4}, {3, 8}, {5, 12} };
+            
+            /* map to another map */
+            assert((con.map(lambda(std::make_pair(_.first, _.second * 2))) == ans));
+            /* map to a vector */
+            assert((con.map(lambda(_.second * 2)) == ming::vector<int>{4, 8, 12}));
+            /* cascade map */
+            auto convert1 = [](auto&& pair) { return std::make_pair(pair.first, pair.second * 2); };
+            auto convert2 = [](auto&& pair) { return std::make_pair(pair.first, pair.second / 2); };
+            assert((con.map(convert1).map(convert2) == con));
+            /* cascade filter */
+            assert((con.filter(lambda(_.first != 1)).filter(lambda(_.first != 3)) == ming::Map<pair_type>{{5, 6}}));
+            /* cascade take */
+            assert((con.take(3).take(2).take(1) == ming::Map<pair_type>{{1, 2}}));
+            /* head tail */
+            assert((con.tail().head() == std::pair<const int, int>(3, 4)));
+            
         }
     }
 }
@@ -341,6 +392,7 @@ int main()
     TestHasMethod();
     TestLambda();
     TestCascadeFunction();
+    TestIsPair();
     TestContainers();
     return 0;
 }

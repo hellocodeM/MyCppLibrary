@@ -33,13 +33,18 @@ void print(const std::string& str) {
     std::cout << str;
 }
 
+template <class K, class V>
+void print(const std::pair<K, V>& p) {
+    std::cout << p.first << ":" << p.second;
+}
+
 template <class T>
-void print(const T& x, typename std::enable_if<!std::has_iterator<T>::value>::type* = 0) {
+void print(const T& x, typename std::enable_if<!std::has_iterator<T>::value>::type* = nullptr) {
     std::cout << x;
 }
 
 template <class T>
-void print(const T& x, typename std::enable_if<std::has_iterator<T>::value>::type* = 0) {
+void print(const T& x, typename std::enable_if<std::has_iterator<T>::value>::type* = nullptr) {
     for (auto& i : x)
         print(i), print(" ");
 }
