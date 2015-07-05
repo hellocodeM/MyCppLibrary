@@ -5,6 +5,7 @@ Some useful codes and tools I wrote and used in everyday life.
 - std
   - has_iterator
   - is_functor
+  - is_pair
   
 - ming::IO
   - print
@@ -26,6 +27,7 @@ Some useful codes and tools I wrote and used in everyday life.
 
 - ming::container
   - Iterable
-  - list
-  - vector
+  - List
+  - Vector
+  - Map
   - range
