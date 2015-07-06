@@ -99,7 +99,7 @@ class Iterable {
 };
 
 } /* end of namespace ming::container */
+
 using container::Iterable;
 } /* end of namespace ming */
-
 #endif

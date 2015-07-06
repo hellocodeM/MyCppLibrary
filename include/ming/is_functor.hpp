@@ -1,9 +1,11 @@
-#ifndef STD_ISFUNCTOR_HPP
-#define STD_ISFUNCTOR_HPP
+#ifndef MING_TYPETRAITS_ISFUNCTOR_HPP
+#define MING_TYPETRAITS_ISFUNCTOR_HPP
 
 #include <type_traits>
 
-namespace std {
+namespace ming{
+namespace type_traits {
+
 template <class T>
 struct is_functor {
     private:
@@ -15,5 +17,9 @@ struct is_functor {
         using type = std::integral_constant<bool, value>;
 };
 
-} /* end of namespace std */
+
+} /* end of namespace type_traits */
+
+using type_traits::is_functor;
+} /* end of namespace ming */
 #endif

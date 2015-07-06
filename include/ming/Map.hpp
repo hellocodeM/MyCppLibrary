@@ -41,7 +41,7 @@ class Map<std::pair<K, V>>: public std::map<K, V>, public Iterable<Map<std::pair
     auto map(Fn f) {
         using result_type = decltype(f(iterable::head()));
         using container_type = typename std::conditional<
-                                            std::is_pair<result_type>::value, 
+                                            ming::is_pair<result_type>::value, 
                                             Map<result_type>, 
                                             Vector<result_type>>::type;
         return iterable::fold(container_type(), [f](auto&& init, auto&& elem) {

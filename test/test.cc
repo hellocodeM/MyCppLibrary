@@ -55,15 +55,15 @@ void TestPrintf() {
 
 void TestHasIterator() {
     Test {
-        assert((std::has_iterator<std::vector<int>>::value == true));
-        assert((std::has_iterator<int>::value == false));
+        assert((ming::has_iterator<std::vector<int>>::value == true));
+        assert((ming::has_iterator<int>::value == false));
     } 
 }
 
 void TestIsFunctor() {
     Test {
-        assert((std::is_functor<Functor>::value));
-        assert((std::is_functor<Dog>::value == false));
+        assert((ming::is_functor<Functor>::value));
+        assert((ming::is_functor<Dog>::value == false));
     } 
 }
 
@@ -80,12 +80,21 @@ void TestHasInnerType() {
 
 HAS_METHOD(size);
 HAS_METHOD(name);
+HAS_METHOD(push_back);
 
 void TestHasMethod() {
     Test {
-        assert(has_size<std::vector<int>>::value);
-        assert(has_name<Dog>::value);
-        assert(has_name<std::vector<int>>::value == false);
+        /* normal member function */
+        static_assert(has_size<std::vector<int>>::value, "vector<int>::size");
+        static_assert(has_name<Dog>::value, "Dog::name");
+        static_assert(has_name<std::vector<int>>::value == false, "vector<int>::size");
+        /* overloaded member function */
+        static_assert(has_push_back<std::vector<int>, int>::value, "vector<int>::push_back(int)");
+        static_assert(has_push_back<std::vector<int>, const int&>::value, "vector<int>::push_back(const int&)");
+        static_assert(has_push_back<std::vector<int>, int&&>::value, "vector<int>::push_back(int&&)");
+        static_assert(has_push_back<std::vector<int>, double>::value, "vector<int>::push_back(double)");
+        static_assert(has_push_back<std::vector<int>, short>::value, "vector<int>::push_back(short)");
+        static_assert(has_push_back<std::vector<int>, Dog>::value == false, "vector<int>::push_back(Dog)");
     } 
 }
 
@@ -196,6 +205,7 @@ void TestLambda() {
 
 void TestCascadeFunction() {
     Test {
+        using namespace ming::placeholders;
         TestBlock {
             ming::Vector<int> vec = { 1, 2, 3};
 
@@ -203,7 +213,7 @@ void TestCascadeFunction() {
             assert((vec == ming::Vector<int>{ 2, 3, 4 }));
             
             assert((vec.map(_1 - 1) == ming::Vector<int>{ 1, 2, 3 }));
-            
+
             assert((vec.fold(0, _1 + _2) == 9));
 
             assert((vec.filter(_1 < 4) == ming::Vector<int>{ 2, 3 }));
@@ -226,13 +236,14 @@ void TestCascadeFunction() {
 
 void TestIsPair() {
     Test {
-        assert((std::is_pair<int>::value == false));
-        assert((std::is_pair<std::pair<int, int>>::value == true));
+        assert((ming::is_pair<int>::value == false));
+        assert((ming::is_pair<std::pair<int, int>>::value == true));
     }
 }
 
 void TestContainers() {
     Test { 
+        using namespace ming::placeholders;
         constexpr size_t cont_size = 100;
         /* test for ming::vector */
         TestBlock {

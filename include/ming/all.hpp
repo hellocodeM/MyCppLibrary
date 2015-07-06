@@ -18,6 +18,5 @@
 #include "range.hpp"
 #include "Map.hpp"
 
-using namespace ming::placeholders;
 
 #endif

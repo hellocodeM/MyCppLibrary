@@ -120,7 +120,7 @@ auto operator << (std::ostream& out, PlaceHolder x) {
     }
 
 
-}
-} /* end of namespace ming::lambda */
+} /* end of namespace ming::placeholdes */
 
+} /* end of namespace ming */
 #endif 

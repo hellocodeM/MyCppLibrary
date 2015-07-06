@@ -1,6 +1,5 @@
-#ifndef MING_HASINNERTYPE_HPP
-#define MING_HASINNERTYPE_HPP
-
+#ifndef MING_PP_HASINNERTYPE_HPP
+#define MING_PP_HASINNERTYPE_HPP
 
 #include <type_traits>
 
@@ -18,6 +17,6 @@ namespace PP {
             using type = std::integral_constant<bool, value>; \
     }
 
-}
+} /* end of namespace ming */
 } /* end of namespcae ming::PP */
 #endif

@@ -4,6 +4,9 @@
 #include <vector>
 
 #include "Iterable.hpp"
+#include "HasMethod.hpp"
+#include "has_iterator.hpp"
+#include "underlying.hpp"
 
 namespace ming {
 namespace container {
