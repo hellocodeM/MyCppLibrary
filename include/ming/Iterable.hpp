@@ -43,7 +43,7 @@ class Iterable {
             if (pred(i))
                 init = f(std::forward<Init>(init), i);
         }
-        return std::move(init);
+        return std::forward<Init>(init);
     }
 
 
@@ -81,7 +81,7 @@ class Iterable {
         const size_t copy_cnt = std::min(n, derived->size());
         auto iter_end = std::next(derived->begin(), copy_cnt);
         Derived res(derived->begin(), iter_end);
-        return std::move(res);
+        return res;
     }
 
     constexpr auto head() const {
@@ -91,7 +91,7 @@ class Iterable {
     constexpr auto tail() const {
         auto iter_begin = std::next(derived->begin());
         Derived res(iter_begin, derived->end());
-        return std::move(res);
+        return res;
     }
 
     private:
