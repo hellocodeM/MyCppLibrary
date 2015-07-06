@@ -15,6 +15,7 @@
 #include "has_iterator.hpp"
 #include "is_functor.hpp"
 #include "is_pair.hpp"
+#include "underlying.hpp"
 
 /* ming::placeholders */
 #include "placeholders.hpp"
