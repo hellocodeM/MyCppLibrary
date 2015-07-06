@@ -2,19 +2,16 @@
 Some useful codes and tools I wrote and used in everyday life.
 
 # List
-- std
+- ming::type_traits
   - has_iterator
   - is_functor
   - is_pair
   
 - ming::IO
   - print
-  - println
   - printf
+  - println
   
-- ming::time
-  - ExecTime
-
 - ming::placeholders
   - placeholders 
   - lambda
@@ -24,6 +21,7 @@ Some useful codes and tools I wrote and used in everyday life.
   - TestBlock
   - HasMethod
   - HasInnerType
+  - ExecTime
 
 - ming::container
   - Iterable
@@ -31,3 +29,6 @@ Some useful codes and tools I wrote and used in everyday life.
   - Vector
   - Map
   - range
+
+- ming::operators
+  - +

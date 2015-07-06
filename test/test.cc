@@ -351,6 +351,16 @@ void TestContainers() {
         }
     }
 }
+
+void TestOverloadedOperator() {
+    Test {
+        using namespace ming::operators;
+        TestBlock {
+            assert((std::move(ming::Vector<int>()) + 1 == ming::Vector<int>{1}));
+        }
+    }
+}
+
 int main()
 {
     TestExecTime();
@@ -364,5 +374,6 @@ int main()
     TestCascadeFunction();
     TestIsPair();
     TestContainers();
+    TestOverloadedOperator();
     return 0;
 }

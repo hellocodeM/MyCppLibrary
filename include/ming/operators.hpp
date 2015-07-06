@@ -1,5 +1,5 @@
-#ifndef MING_CONTAINER_OPERATOR_HPP
-#define MING_CONTAINER_OPERATOR_HPP
+#ifndef MING_OPERATORS_OPERATOR_HPP
+#define MING_OPERATORS_OPERATOR_HPP
 
 #include <type_traits>
 #include <utility>
@@ -9,8 +9,7 @@
 #include "HasMethod.hpp"
 
 namespace ming {
-namespace container {
-
+namespace operators {
 
 HAS_METHOD(push_back);
 template <class Cont,
@@ -23,7 +22,7 @@ auto operator + (Cont&& lhs, T&& rhs)
             ming::has_iterator<Cont_>::value &&
             has_push_back<Cont_, T_>::value &&
             std::is_same<T_, typename Cont_::value_type>::value,
-            Cont&&>::type {
+            Cont>::type {
     Cont res = std::forward<Cont>(lhs);
     res.push_back(rhs);
     return res;
@@ -40,12 +39,13 @@ auto operator + (Cont&& lhs, T&& rhs)
             ming::has_iterator<Cont_>::value &&
             has_insert<Cont_, T_>::value &&
             std::is_same<T_, typename Cont_::value_type>::value,
-            Cont&&>::type {
+            Cont>::type {
     Cont res = std::forward<Cont>(lhs);
     res.insert(rhs);
-    return res;
+    return (res);
 }
 
-} /* end of namespace ming::container */
+} /* end of namespace ming::operators */
 } /* end of namespace ming */
+
 #endif
