@@ -17,9 +17,15 @@ struct is_functor {
         using type = std::integral_constant<bool, value>;
 };
 
+/**
+ * Helper function
+ */
+template <class T>
+using is_functor_t = typename is_functor<T>::type;
 
 } /* end of namespace type_traits */
 
 using type_traits::is_functor;
+using type_traits::is_functor_t;
 } /* end of namespace ming */
 #endif

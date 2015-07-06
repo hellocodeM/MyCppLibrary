@@ -14,15 +14,15 @@ namespace operators {
 HAS_METHOD(push_back);
 template <class Cont,
           class T,
-          class Cont_ = typename ming::underlying<Cont>::type,
-          class T_ = typename ming::underlying<T>::type
+          class Cont_ = ming::underlying_t<Cont>,
+          class T_ = ming::underlying_t<T>
          >
 auto operator + (Cont&& lhs, T&& rhs) 
-    -> typename std::enable_if<
+    -> typename std::enable_if_t<
             ming::has_iterator<Cont_>::value &&
             has_push_back<Cont_, T_>::value &&
             std::is_same<T_, typename Cont_::value_type>::value,
-            Cont>::type {
+            Cont> {
     Cont res = std::forward<Cont>(lhs);
     res.push_back(rhs);
     return res;
@@ -31,15 +31,15 @@ auto operator + (Cont&& lhs, T&& rhs)
 HAS_METHOD(insert);
 template <class Cont,
           class T,
-          class Cont_ = typename ming::underlying<Cont>::type,
-          class T_ = typename ming::underlying<T>::type
+          class Cont_ = ming::underlying_t<Cont>,
+          class T_ = ming::underlying_t<T>
          >
 auto operator + (Cont&& lhs, T&& rhs) 
-    -> typename std::enable_if<
+    -> typename std::enable_if_t<
             ming::has_iterator<Cont_>::value &&
             has_insert<Cont_, T_>::value &&
             std::is_same<T_, typename Cont_::value_type>::value,
-            Cont>::type {
+            Cont> {
     Cont res = std::forward<Cont>(lhs);
     res.insert(rhs);
     return (res);

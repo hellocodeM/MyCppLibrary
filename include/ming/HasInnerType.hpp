@@ -2,6 +2,7 @@
 #define MING_PP_HASINNERTYPE_HPP
 
 #include <type_traits>
+#include <vector>
 
 namespace ming {
 namespace PP {

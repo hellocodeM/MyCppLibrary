@@ -1,7 +1,6 @@
 #ifndef MING_PP_HASMETHOD_HPP
 #define MING_PP_HASMETHOD_HPP
 
-
 #include <type_traits>
 
 namespace ming {
@@ -23,9 +22,8 @@ namespace PP {
         public: \
             const static bool value = decltype(check<T>(0))::value; \
             using type = std::integral_constant<bool, value>; \
-    }
-
-}
+    } 
 
 } /* end of namespace ming::PP */
+} /* end of namespace ming */
 #endif 

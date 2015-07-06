@@ -39,12 +39,12 @@ void print(const std::pair<K, V>& p) {
 }
 
 template <class T>
-void print(const T& x, typename std::enable_if<!ming::has_iterator<T>::value>::type* = nullptr) {
+void print(const T& x, std::enable_if_t<!ming::has_iterator<T>::value>* = nullptr) {
     std::cout << x;
 }
 
 template <class T>
-void print(const T& x, typename std::enable_if<ming::has_iterator<T>::value>::type* = nullptr) {
+void print(const T& x, std::enable_if_t<ming::has_iterator<T>::value>* = nullptr) {
     for (auto& i : x)
         print(i), print(" ");
 }
