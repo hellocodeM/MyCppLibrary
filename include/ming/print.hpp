@@ -36,19 +36,13 @@ void print(const std::string& str) {
     std::cout << str;
 }
 
-/**
- * Print std::pair.
- */
-template <class K, class V>
-void print(const std::pair<K, V>& p) {
-    std::cout << p.first << ":" << p.second;
-}
 
 /**
  * Print a object.
  */
 template <class T>
-void print(const T& x, std::enable_if_t<!ming::has_iterator<T>::value>* = nullptr) {
+auto print(const T& x) 
+    -> std::enable_if_t<!ming::has_iterator<T>::value, void> {
     std::cout << x;
 }
 
@@ -56,9 +50,20 @@ void print(const T& x, std::enable_if_t<!ming::has_iterator<T>::value>* = nullpt
  * Print a container with iterator.
  */
 template <class T>
-void print(const T& x, std::enable_if_t<ming::has_iterator<T>::value>* = nullptr) {
-    for (auto& i : x)
-        print(i), print(" ");
+auto print(const T& x) 
+    -> std::enable_if_t<ming::has_iterator<T>::value, void> {
+    for (auto&& i : x)
+        print(std::forward<decltype(i)>(i)), print(" ");
+}
+
+/**
+ * Print std::pair.
+ */
+template <class K, class V>
+void print(const std::pair<K, V>& p) {
+    print(p.first);
+    print(":");
+    print(p.second);
 }
 
 template <class T>

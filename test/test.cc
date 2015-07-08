@@ -37,9 +37,11 @@ void TestExecutionTime() {
 
 void TestPrint() {
     Test {
+        const std::vector<int> vec{1, 2, 3};
         ming::println("scooby doo");
         ming::println(1024);
         ming::println(std::vector<int> {1, 2, 3});
+        ming::println(vec);
         ming::println(std::make_pair(1, 2));
     }
 }

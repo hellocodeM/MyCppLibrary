@@ -8,8 +8,10 @@
 /* ming::PP */
 #include "HasMethod.hpp"
 #include "HasInnerType.hpp"
-#include "ExecTime.hpp"
 #include "Test.hpp"
+
+/* time */
+#include "time.hpp"
 
 /* ming::type_traits */
 #include "has_iterator.hpp"
