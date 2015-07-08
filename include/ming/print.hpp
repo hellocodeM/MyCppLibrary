@@ -29,20 +29,32 @@ namespace IO {
 void print() {
 }
 
+/**
+ * Print a std::string.
+ */
 void print(const std::string& str) {
     std::cout << str;
 }
 
+/**
+ * Print std::pair.
+ */
 template <class K, class V>
 void print(const std::pair<K, V>& p) {
     std::cout << p.first << ":" << p.second;
 }
 
+/**
+ * Print a object.
+ */
 template <class T>
 void print(const T& x, std::enable_if_t<!ming::has_iterator<T>::value>* = nullptr) {
     std::cout << x;
 }
 
+/**
+ * Print a container with iterator.
+ */
 template <class T>
 void print(const T& x, std::enable_if_t<ming::has_iterator<T>::value>* = nullptr) {
     for (auto& i : x)

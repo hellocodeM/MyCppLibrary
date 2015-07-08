@@ -60,7 +60,7 @@ class Iterable {
         return derived->fold(container_type(), [f](auto&& init, auto&& item) {
             init.add(f(std::forward<decltype(item)>(item)));
             return std::forward<decltype(init)>(init);
-            });
+        });
     }
 
     template <class Fn>

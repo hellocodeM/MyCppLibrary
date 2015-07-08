@@ -28,10 +28,10 @@ struct Functor {
     }
 };
 
-void TestExecTime() {
+void TestExecutionTime() {
     Test {
         std::vector<int> vec(200000);
-        ming::println(ExecTime(std::random_shuffle(vec.begin(), vec.end())));
+        ming::println(ExecutionTime(std::random_shuffle(vec.begin(), vec.end())));
     }
 }
 
@@ -226,10 +226,10 @@ void TestCascadeFunction() {
             ming::Vector<int> vec(2000000, 1);
             std::iota(vec.begin(), vec.end(), 1);
 
-            ming::printf("map 2000000 elements time: %\n", ExecTime(vec.map(_1 - 1)));
-            ming::printf("filter 20000000 elements time: %\n", ExecTime(vec.filter(_1 <= 10000)));
-            ming::printf("foreach 20000000 elements time: %\n", ExecTime(vec.foreach(_1 + 1)));
-            ming::printf("fold 20000000 elements time: %\n", ExecTime(vec.fold(0, _1 + _2)));
+            ming::printf("map 2000000 elements time: %\n", ExecutionTime(vec.map(_1 - 1)));
+            ming::printf("filter 20000000 elements time: %\n", ExecutionTime(vec.filter(_1 <= 10000)));
+            ming::printf("foreach 20000000 elements time: %\n", ExecutionTime(vec.foreach(_1 + 1)));
+            ming::printf("fold 20000000 elements time: %\n", ExecutionTime(vec.fold(0, _1 + _2)));
         }
     }
 }
@@ -363,7 +363,7 @@ void TestOverloadedOperator() {
 
 int main()
 {
-    TestExecTime();
+    TestExecutionTime();
     TestPrint();
     TestPrintf();
     TestHasIterator();
