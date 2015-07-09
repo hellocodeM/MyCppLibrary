@@ -208,6 +208,7 @@ void TestLambda() {
 void TestCascadeFunction() {
     Test {
         using namespace ming::placeholders;
+        constexpr size_t size = 1234567;
         TestBlock {
             ming::Vector<int> vec = { 1, 2, 3};
 
@@ -225,13 +226,13 @@ void TestCascadeFunction() {
         }
         /* performance test */
         TestBlock {
-            ming::Vector<int> vec(2000000, 1);
+            ming::Vector<int> vec(size, 1);
             std::iota(vec.begin(), vec.end(), 1);
 
-            ming::printf("map 2000000 elements time: %\n", ExecutionTime(vec.map(_1 - 1)));
-            ming::printf("filter 20000000 elements time: %\n", ExecutionTime(vec.filter(_1 <= 10000)));
-            ming::printf("foreach 20000000 elements time: %\n", ExecutionTime(vec.foreach(_1 + 1)));
-            ming::printf("fold 20000000 elements time: %\n", ExecutionTime(vec.fold(0, _1 + _2)));
+            ming::printf("map % elements time: %\n", size, ExecutionTime(vec.map(_1 - 1)));
+            ming::printf("filter % elements time: %\n", size, ExecutionTime(vec.filter(_1 <= 10000)));
+            ming::printf("foreach % elements time: %\n", size, ExecutionTime(vec.foreach(_1 + 1)));
+            ming::printf("fold % elements time: %\n", size, ExecutionTime(vec.fold(0, _1 + _2)));
         }
     }
 }
@@ -432,6 +433,30 @@ void TestOverloadedOperator() {
     }
 }
 
+
+void TestParallelContainers() {
+    Test {
+        using namespace ming::placeholders;
+        constexpr size_t size = 12345678;
+        
+        /* performance bench mark */
+        TestBlock {
+            using Container = ming::ParallelVector<int>;
+
+            ming::Vector<int> vec(size);
+            Container con1(size);
+
+            std::iota(con1.begin(), con1.end(), 1);
+            std::iota(vec.begin(), vec.end(), 1);
+            ming::printf("map % elements parallel duration: %ms\n", size, DurationTime(con1.map(_ * 2)));
+            ming::printf("map % elements sequential duration: %ms\n", size, DurationTime(vec.map(_ * 2)));
+            ming::printf("filter % elements parallel duration: %ms\n", size, DurationTime(con1.filter(_ < 2)));
+            ming::printf("filter % elements sequential duration: %ms\n", size, DurationTime(vec.filter(_ < 2)));
+            ming::printf("foreach % elements parallel duration: %ms\n", size, DurationTime(con1.foreach(_ * 2)));
+            ming::printf("foreach % elements sequential duration: %ms\n", size, DurationTime(vec.foreach(_ * 2)));
+        }
+    }
+}
 int main()
 {
     TestExecutionTime();
@@ -446,5 +471,6 @@ int main()
     TestIsPair();
     TestContainers();
     TestOverloadedOperator();
+    TestParallelContainers();
     return 0;
 }

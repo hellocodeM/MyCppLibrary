@@ -58,7 +58,7 @@ class Iterable {
         using item_type = decltype(f(head()));
         using container_type = typename Derived::template container<item_type>::type;
         return derived->fold(container_type(), [f](auto&& init, auto&& item) {
-            init.add(f(std::forward<decltype(item)>(item)));
+            init += f(std::forward<decltype(item)>(item));
             return std::forward<decltype(init)>(init);
         });
     }
@@ -66,8 +66,8 @@ class Iterable {
     template <class Fn>
     constexpr auto filter(Fn f) {
         return derived->fold_if(Derived(), [](auto&& init, auto&& item) {
-                init.add(item);
-                return std::forward<decltype(init)>(init);
+            init += std::forward<decltype(item)>(item);
+            return std::forward<decltype(init)>(init);
         }, f);
     }
 
@@ -85,7 +85,7 @@ class Iterable {
     }
 
     constexpr auto head() const {
-        return *derived->begin();
+        return *(derived->begin());
     }
 
     constexpr auto tail() const {
