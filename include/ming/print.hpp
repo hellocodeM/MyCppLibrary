@@ -26,6 +26,9 @@ namespace IO {
  * @desc: Print arbitrary object to stdout, with a line break. 
  */
 
+/**
+ * Trivial.
+ */
 void print() {
 }
 

@@ -108,12 +108,12 @@ void TestLambda() {
         TestBlock {
             int x = 1;
             const int y = 1;
-            
+
             auto add1 = _1 + 1;
             auto addx = _1 + x;
             auto addy = _1 + y;
             auto add = _1 + _2;
-            
+
             assert((add1(1) == 2));
             assert((add1(x) == 2));
             assert((add1(y) == 2));
@@ -146,7 +146,7 @@ void TestLambda() {
 
             std::for_each(vec.begin(), vec.end(), _1 -= 1);
             assert((vec == std::vector<int>{ 1, 2, 3} ));
-            
+
             std::for_each(vec.begin(), vec.end(), std::cout << _1);
             std::for_each(vec.begin(), vec.end(), _1 %= 4);
             assert((vec == std::vector<int>{ 1, 2, 3 } ));
@@ -164,11 +164,11 @@ void TestLambda() {
         TestBlock {
             int x = 1;
             const int y = 1;
-            
+
             auto add1 = lambda(_ + 1);
             auto addx = lambda(_ + x);
             auto addy = lambda(_ + y);
-            
+
             assert((add1(1) == 2));
             assert((add1(x) == 2));
             assert((add1(y) == 2));
@@ -200,9 +200,9 @@ void TestLambda() {
             std::for_each(vec.begin(), vec.end(), lambda(ming::println(_)));
             std::for_each(vec.begin(), vec.end(), lambda(printf("%d\n", _)));
         }
-        
+
     }
-    
+
 }
 
 void TestCascadeFunction() {
@@ -213,7 +213,7 @@ void TestCascadeFunction() {
 
             vec.foreach(_1 += 1);
             assert((vec == ming::Vector<int>{ 2, 3, 4 }));
-            
+
             assert((vec.map(_1 - 1) == ming::Vector<int>{ 1, 2, 3 }));
 
             assert((vec.fold(0, _1 + _2) == 9));
@@ -269,7 +269,7 @@ void TestContainers() {
             assert((ming::range(0, 100).filter(lambda(_ % 2 == 0)).map(_ / 2).fold(0, _ + _) == 1225));
             /* head, tail */
             assert((ming::range(0, 100).tail().head() == 1));
-            
+
         }
 
         /* test for ming::list */
@@ -334,7 +334,7 @@ void TestContainers() {
 
             container con = { { 1, 2}, { 3, 4}, { 5, 6 } };
             container ans = { {1, 4}, {3, 8}, {5, 12} };
-            
+
             /* map to another map */
             assert((con.map(lambda(std::make_pair(_.first, _.second * 2))) == ans));
             /* map to a vector */
@@ -349,16 +349,85 @@ void TestContainers() {
             assert((con.take(3).take(2).take(1) == ming::Map<pair_type>{{1, 2}}));
             /* head tail */
             assert((con.tail().head() == std::pair<const int, int>(3, 4)));
-            
+
         }
     }
 }
 
+template <class Container>
+void TestOverloadedOperatorCase() {
+    Container con1{1, 2, 3};
+    Container con2{4, 5, 6};
+
+    /* operator += */
+    /* container and element */
+    con1 += 4;
+    assert((con1 == Container{1, 2, 3, 4}));
+    /* container and container */
+    con1 = {1, 2, 3};
+    con1 += con2;
+    assert((con1 == Container{1, 2, 3, 4, 5, 6}));
+    con1 = {1, 2, 3};
+    con2 += con1;
+    assert((con2 == Container{4, 5, 6, 1, 2, 3}));
+
+    /* operator + */
+    con1 = {1, 2, 3};
+    con2 = {4, 5, 6};
+    /* container and element */
+    assert(((con1 + 4) == Container{1, 2, 3, 4}));
+    assert(((4 + con1) == Container{1, 2, 3, 4}));
+    /* container and container */
+    assert((con1 + con2 == Container{1, 2, 3, 4, 5, 6}));
+    assert((con2 + con1 == Container{4, 5, 6, 1, 2, 3}));
+    assert((con1 == Container{1, 2, 3}));
+    assert((con2 == Container{4, 5, 6}));
+    /* rvalue */
+    assert((Container{1} + 2 == Container{1, 2}));
+    assert((Container{1} + Container{2} == Container{1, 2}));
+}
+
 void TestOverloadedOperator() {
     Test {
-        using namespace ming::operators;
+        /* ming::Vector */
         TestBlock {
-            assert((std::move(ming::Vector<int>()) + 1 == ming::Vector<int>{1}));
+            using Container = ming::Vector<int>;
+            TestOverloadedOperatorCase<Container>();
+        }
+        /* ming::List */
+        TestBlock {
+            using Container = ming::List<int>;
+            TestOverloadedOperatorCase<Container>();
+        }
+        TestBlock {
+            using Container = ming::Set<int>;
+            TestOverloadedOperatorCase<Container>();
+        }
+        TestBlock {
+            using Container = ming::Map<std::pair<int, int>>;
+            Container con1{{1, 2}, {3, 4}};
+            Container con2{{5, 6}, {7, 8}};
+
+            /* operator += */
+            /* container and element */
+            con1 += std::make_pair(5, 6);
+            assert((con1 == Container{{1,2}, {3,4}, {5,6}}));
+            con1 = {{1,2}, {3,4}};
+            /* contaienr and container */
+            con1 += con2;
+            assert((con1 == Container{{1,2}, {3,4}, {5,6}, {7,8}}));
+
+            /* oeprator + */
+            con1 = {{1,2}, {3,4}};
+            /* container and element */
+            assert((con1 + std::make_pair(5, 6) == Container{{1,2}, {3,4}, {5,6}}));
+            assert((std::make_pair(5, 6) + con1 == Container{{1,2}, {3,4}, {5,6}}));
+            /* container and contaienr */
+            assert((con1 + con2 == Container{{1,2}, {3,4}, {5,6}, {7,8}}));
+            assert((con2 + con1 == Container{{1,2}, {3,4}, {5,6}, {7,8}}));
+            /* rvalue */
+            assert((Container{{1,2}} + std::make_pair(3,4) == Container{{1,2}, {3,4}}));
+            assert((Container{{1,2}} + Container{{3,4}} == Container{{1,2}, {3,4}}));
         }
     }
 }
