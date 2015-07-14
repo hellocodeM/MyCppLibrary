@@ -6,6 +6,7 @@
 #include <iterator>
 
 #include "printf.hpp"
+#include "ParallelIterable.hpp"
 
 namespace ming {
 namespace container {
@@ -55,8 +56,8 @@ class Iterable {
 
     template<class Fn>
     constexpr auto map(Fn f) {
-        using item_type = decltype(f(head()));
-        using container_type = typename Derived::template container<item_type>::type;
+        using result_type = decltype(f(head()));
+        using container_type = typename Derived::template container<result_type>::type;
         return derived->fold(container_type(), [f](auto&& init, auto&& item) {
             init += f(std::forward<decltype(item)>(item));
             return std::forward<decltype(init)>(init);

@@ -4,6 +4,7 @@
 #include <list>
 
 #include "Iterable.hpp"
+#include "ParallelList.hpp"
 
 namespace ming {
 namespace container {
@@ -24,9 +25,13 @@ class List: public std::list<T>, public Iterable<List<T>> {
         using type = List<U>;
     };
 
-    void add(const T& elem) {
-        base::push_back(elem);
+    /**
+     * Parallelly
+     */
+    ming::ParallelList<T> par() const {
+        return ming::ParallelList<T>(*this);
     }
+
 };
 
 

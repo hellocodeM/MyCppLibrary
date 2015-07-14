@@ -7,6 +7,7 @@
 #include "Iterable.hpp"
 #include "is_pair.hpp"
 #include "Vector.hpp"
+#include "ParallelMap.hpp"
 
 namespace ming {
 namespace container {
@@ -15,12 +16,16 @@ template <class Pair>
 class Map;
 
 template <class K, class V>
-class Map<std::pair<K, V>>: public std::map<K, V>, public Iterable<Map<std::pair<K, V>>> {
+class Map<std::pair<K, V>>: public std::map<K, V>, 
+      public Iterable<Map<std::pair<K, V>>> {
     public:
+    using first_type = K;
+    using second_type = V;
+    using value_type = std::pair<K, V>;
     using base = std::map<K, V>;
+    using iterable = Iterable<Map<value_type>>;
+    /* inherit construtor */
     using std::map<K, V>::map;
-    using pair_type = std::pair<K, V>;
-    using iterable = Iterable<Map<pair_type>>;
     
     /**
      * Use for create another container with type T, U.
@@ -30,24 +35,28 @@ class Map<std::pair<K, V>>: public std::map<K, V>, public Iterable<Map<std::pair
         using type = Map<std::pair<T, U>>;
     };
 
-    constexpr void add(const pair_type& elem) {
-        base::insert(elem);
-    }
-
     /**
      * Sepcialization for map method.
      */
     template <class Fn>
-    constexpr auto map(Fn f) {
+    constexpr auto map(Fn f) const {
         using result_type = decltype(f(iterable::head()));
         using container_type = std::conditional_t<
                                     ming::is_pair<result_type>::value, 
                                     Map<result_type>, 
-                                    Vector<result_type> >;
+                                    Vector<result_type> 
+                                >;
         return iterable::fold(container_type(), [f](auto&& init, auto&& elem) {
-                init.add(f(std::forward<decltype(elem)>(elem)));
+                init += f(std::forward<decltype(elem)>(elem));
                 return std::forward<decltype(init)>(init);
-                });
+        });
+    }
+
+    /**
+     * Parallelly
+     */
+    ParallelMap<value_type> par() const {
+        return ParallelMap<value_type>(*this);
     }
 };
 

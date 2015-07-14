@@ -13,7 +13,7 @@ template <class T = ming::Vector<int>>
 T range(int from, int to, int step = 1) {
     T res;
     while (from < to) {
-        res.add(from);
+        res += from;
         from += step;
     }
     return res;

@@ -208,7 +208,7 @@ void TestLambda() {
 void TestCascadeFunction() {
     Test {
         using namespace ming::placeholders;
-        constexpr size_t size = 1234567;
+        constexpr size_t size = 12345678;
         TestBlock {
             ming::Vector<int> vec = { 1, 2, 3};
 
@@ -318,7 +318,7 @@ void TestContainers() {
             /* cascade map */
             assert((range(0, 10).map(_ * 2).map(_ * 2).map(_ * 2) == range(0, 80, 8)));
             /* cascade fold */
-            assert((range(0, 10).fold(ming::Set<int>(), lambda2((_1.add(_2 * 2), _1))).fold(0, _ + _) == 90));
+            assert((range(0, 10).fold(ming::Set<int>(), lambda2((_1 + (_2 * 2), _1))).fold(0, _ + _) == 90));
             /* cascade filter */
             assert((range(0, 100).filter(lambda(_ % 2 == 0)).filter(lambda(_ % 3 == 0)) == range(0, 100, 6)));
             /* cascade take */

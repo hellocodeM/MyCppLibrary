@@ -5,6 +5,7 @@
 
 #include "Iterable.hpp"
 #include "range.hpp"
+#include "ParallelSet.hpp"
 
 namespace ming {
 namespace container {
@@ -25,12 +26,12 @@ class Set: public std::set<T>, public Iterable<Set<T>> {
     };
 
     /**
-     * Add element.
+     * Parallelly
      */
-    
-    void add(const T& elem) {
-        base::insert(elem);
+    ParallelSet<T> par() const {
+        return ParallelSet<T>(*this);
     }
+    
 };
 } /* end of namespace ming::container */
 

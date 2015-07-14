@@ -7,6 +7,7 @@
 #include "HasMethod.hpp"
 #include "has_iterator.hpp"
 #include "underlying.hpp"
+#include "ParallelVector.hpp"
 
 namespace ming {
 namespace container {
@@ -31,6 +32,13 @@ class Vector: public std::vector<T>, public Iterable<Vector<T>>{
      */
     void add(const T& elem) {
         base::push_back(elem);
+    }
+
+    /**
+     * Parallelly
+     */
+    ParallelVector<T> par() const {
+        return ParallelVector<T>(*this);
     }
 };
 

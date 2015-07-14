@@ -29,6 +29,9 @@
 #include "range.hpp"
 #include "Map.hpp"
 #include "ParallelVector.hpp"
+#include "ParallelList.hpp"
+#include "ParallelSet.hpp"
+#include "ParallelMap.hpp"
 
 /* operators */
 #include "operators.hpp"

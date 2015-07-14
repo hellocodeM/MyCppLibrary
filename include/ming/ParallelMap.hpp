@@ -8,16 +8,21 @@
 namespace ming {
 namespace container {
 
-template <class T>
-class ParallelMap: public std::map<typename T::first_type, typename T::second_type>, 
-                   public ming::ParallelIterable<ParallelMap<T>> {
+template <class Pair>
+class ParallelMap;
+
+template <class K, class V>
+class ParallelMap<std::pair<K, V>>: public std::map<K, V>, 
+      public ming::ParallelIterable<ParallelMap<std::pair<K, V>>> {
     
     public:
-    using first_type = typename T::first_type;
-    using second_type = typename T::second_type;
-    using std::map<first_type, second_type>::map;
+    using first_type = K;
+    using second_type = V;
+    using value_type = std::pair<K, V>;
     using base = std::map<first_type, second_type>;
-    using iterable = ming::ParallelIterable<ParallelMap<T>>;
+    using iterable = ming::ParallelIterable<ParallelMap<value_type>>;
+    /* inherit constructor */
+    using std::map<first_type, second_type>::map;
 
     /**
      * Userd for creating another container with type U.

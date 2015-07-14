@@ -3,7 +3,6 @@
 
 #include <list>
 
-#include "List.hpp"
 #include "ParallelIterable.hpp"
 
 namespace ming {
@@ -21,13 +20,13 @@ class ParallelList: public std::list<T>, public ming::ParallelIterable<ParallelL
      */
     template <class U>
     struct container {
-        using type = ParallelVector<U>;
+        using type = ParallelList<U>;
     };
 };
 
 
 } /* end of namespace ming::container */
 
-using container::ParalleList;
+using container::ParallelList;
 } /* end of namespace ming */
 #endif 

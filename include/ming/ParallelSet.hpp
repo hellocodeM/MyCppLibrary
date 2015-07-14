@@ -3,7 +3,6 @@
 
 #include <set>
 
-#include "Set.hpp"
 #include "ParallelIterable.hpp"
 
 namespace ming {
@@ -24,7 +23,6 @@ class ParallelSet: public std::set<T>, public ming::ParallelIterable<ParallelSet
     struct container {
         using type = ParallelSet<U>;
     };
-
 };
 } /* end of namespace ming::container */
 
