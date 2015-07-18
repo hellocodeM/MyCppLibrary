@@ -4,18 +4,21 @@
 #include <set>
 
 #include "Iterable.hpp"
-#include "range.hpp"
-#include "ParallelSet.hpp"
 
 namespace ming {
 namespace container {
 
 template <class T>
+class ParallelSet;
+
+template <class T>
 class Set: public std::set<T>, public Iterable<Set<T>> {
     public:
+    using value_type = T;
     using std::set<T>::set;
     using base = std::set<T>;
     using iterable = Iterable<Set<T>>;
+
 
     /**
      * Used for obtain another container with type U.

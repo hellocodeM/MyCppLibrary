@@ -37,7 +37,7 @@ class Vector: public std::vector<T>, public Iterable<Vector<T>>{
     /**
      * Parallelly
      */
-    ParallelVector<T> par() const {
+    constexpr ming::ParallelVector<T> par() {
         return ParallelVector<T>(*this);
     }
 };

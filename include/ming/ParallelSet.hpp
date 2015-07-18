@@ -12,6 +12,7 @@ template <class T>
 class ParallelSet: public std::set<T>, public ming::ParallelIterable<ParallelSet<T>> {
     
     public:
+    using value_type = T;
     using std::set<T>::set;
     using base = std::set<T>;
     using iterable = ming::ParallelIterable<ParallelSet<T>>;

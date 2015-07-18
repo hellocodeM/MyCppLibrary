@@ -3,7 +3,6 @@
 
 #include <vector>
 
-#include "Vector.hpp"
 #include "ParallelIterable.hpp"
 
 namespace ming {

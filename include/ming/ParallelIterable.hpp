@@ -37,13 +37,13 @@ class ParallelIterable {
         auto first = derived->begin();
         auto last = derived->end();
         int interval = std::distance(first, last) / thread_num;
-        std::future<Init> fs[4];
+        std::future<Init> fs[thread_num];
 
         for (int i = 0; i < thread_num; i++) {
             auto start = std::next(first, interval*i);
             auto end = (i == thread_num - 1) ? last : std::next(start, interval);
-            fs[i] = std::async(std::launch::async, [=]{
-                Init res;
+            fs[i] = std::async(std::launch::async, [=, init=std::forward<Init>(init)]{
+                Init res = init;
                 for (auto i = start; i != end; ++i) {
                     if (pred(*i))
                         res = f(std::forward<Init>(res), *i);
@@ -51,7 +51,7 @@ class ParallelIterable {
                 return res;
             });
         }
-        Init res;
+        Init res = init;
         for (auto&& i : fs)
             res += i.get();
         return res;
