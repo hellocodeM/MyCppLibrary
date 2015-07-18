@@ -28,7 +28,7 @@ class List: public std::list<T>, public Iterable<List<T>> {
     /**
      * Parallelly
      */
-    ming::ParallelList<T> par() const {
+    constexpr ming::ParallelList<T> par() {
         return ming::ParallelList<T>(*this);
     }
 

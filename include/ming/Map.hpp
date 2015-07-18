@@ -39,7 +39,7 @@ class Map<std::pair<K, V>>: public std::map<K, V>,
      * Sepcialization for map method.
      */
     template <class Fn>
-    constexpr auto map(Fn f) const {
+    constexpr auto map(Fn f) {
         using result_type = decltype(f(iterable::head()));
         using container_type = std::conditional_t<
                                     ming::is_pair<result_type>::value, 
@@ -48,14 +48,14 @@ class Map<std::pair<K, V>>: public std::map<K, V>,
                                 >;
         return iterable::fold(container_type(), [f](auto&& init, auto&& elem) {
                 init += f(std::forward<decltype(elem)>(elem));
-                return std::forward<decltype(init)>(init);
+                return init;
         });
     }
 
     /**
      * Parallelly
      */
-    ParallelMap<value_type> par() const {
+    constexpr ParallelMap<value_type> par() {
         return ParallelMap<value_type>(*this);
     }
 };

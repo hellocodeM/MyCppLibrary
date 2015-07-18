@@ -28,7 +28,7 @@ class Set: public std::set<T>, public Iterable<Set<T>> {
     /**
      * Parallelly
      */
-    ParallelSet<T> par() const {
+    constexpr ParallelSet<T> par() {
         return ParallelSet<T>(*this);
     }
     
