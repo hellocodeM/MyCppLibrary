@@ -437,6 +437,23 @@ void TestParallelContainers() {
         }
     }
 }
+
+void TestLazyContainers() {
+    Test {
+        using namespace ming::placeholders;
+        /* correctness */
+        TestBlock {
+            /* ming::LazyVector */
+            TestBlock {
+                using container = ming::LazyVector<int>;
+                container con = ming::range<container>(0, 10);
+                con.map(_ * 2).map(_ * 3).map(_ * 4);
+            }
+        }
+        /* performance */
+    }
+}
+
 int main()
 {
     TestExecutionTime();
@@ -452,5 +469,6 @@ int main()
     TestOverloadedOperator();
     TestContainers();
     TestParallelContainers();
+    TestLazyContainers();
     return 0;
 }
