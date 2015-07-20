@@ -29,7 +29,15 @@ Some useful codes and tools I wrote and used in everyday life.
   - List
   - Vector
   - Map
+  - Set
+  - ParallelIterable
+  - ParallelList
+  - ParallelVector
+  - ParallelMap
+  - ParallelSet
   - range
+  
 
 - ming::operators
   - +
+  - +=
