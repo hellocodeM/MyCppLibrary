@@ -193,7 +193,6 @@ auto operator + (LHS&& lhs, RHS&& rhs)
     return LHS_(std::forward<LHS>(lhs)) += rhs;
 }
 
-
 } /* end of namespace ming::container */
 } /* end of namespace ming */
 

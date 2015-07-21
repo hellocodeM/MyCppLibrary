@@ -29,7 +29,7 @@ class List: public std::list<T>, public Iterable<List<T>> {
      * Parallelly
      */
     constexpr ming::ParallelList<T> par() {
-        return ming::ParallelList<T>(*this);
+        return ming::ParallelList<T>(base::begin(), base::end());
     }
 
 };

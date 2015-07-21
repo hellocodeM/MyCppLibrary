@@ -32,7 +32,6 @@
 #include "ParallelList.hpp"
 #include "ParallelSet.hpp"
 #include "ParallelMap.hpp"
-#include "LazyVector.hpp"
 
 /* operators */
 #include "operators.hpp"

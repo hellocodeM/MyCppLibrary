@@ -32,7 +32,7 @@ class Set: public std::set<T>, public Iterable<Set<T>> {
      * Parallelly
      */
     constexpr ParallelSet<T> par() {
-        return ParallelSet<T>(*this);
+        return ParallelSet<T>(base::begin(), base::end());
     }
     
 };

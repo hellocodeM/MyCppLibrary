@@ -225,15 +225,6 @@ void TestCascadeFunction() {
             assert((vec.take(100) == ming::Vector<int>{ 2, 3, 4 }));
         }
         /* performance test */
-        TestBlock {
-            ming::Vector<int> vec(size, 1);
-            std::iota(vec.begin(), vec.end(), 1);
-
-            ming::printf("map % elements time: %\n", size, ExecutionTime(vec.map(_1 - 1)));
-            ming::printf("filter % elements time: %\n", size, ExecutionTime(vec.filter(_1 <= 10000)));
-            ming::printf("foreach % elements time: %\n", size, ExecutionTime(vec.foreach(_1 + 1)));
-            ming::printf("fold % elements time: %\n", size, ExecutionTime(vec.fold(0, _1 + _2)));
-        }
     }
 }
 
@@ -395,7 +386,6 @@ void TestContainers() {
 void TestParallelContainers() {
     Test {
         using namespace ming::placeholders;
-        constexpr size_t size = 12345678;
         
         /* correctness */
 
@@ -419,38 +409,13 @@ void TestParallelContainers() {
             using container = ming::ParallelMap<std::pair<int, int>>;
             TestContainerCaseMap<container>();
         }
-        /* performance */
         TestBlock {
-            using container = ming::ParallelVector<int>;
-
-            ming::Vector<int> vec(size);
-            container con1(size);
-
-            std::iota(con1.begin(), con1.end(), 1);
-            std::iota(vec.begin(), vec.end(), 1);
-            ming::printf("map % elements parallel duration: %ms\n", size, DurationTime(con1.map(_ * 2)));
-            ming::printf("map % elements sequential duration: %ms\n", size, DurationTime(vec.map(_ * 2)));
-            ming::printf("filter % elements parallel duration: %ms\n", size, DurationTime(con1.filter(_ < 2)));
-            ming::printf("filter % elements sequential duration: %ms\n", size, DurationTime(vec.filter(_ < 2)));
-            ming::printf("foreach % elements parallel duration: %ms\n", size, DurationTime(con1.foreach(_ * 2)));
-            ming::printf("foreach % elements sequential duration: %ms\n", size, DurationTime(vec.foreach(_ * 2)));
+            /* par memeber function */
+            assert((ming::Vector<int>{1, 2, 3}.par() == ming::ParallelVector<int>{1, 2, 3}));
+            assert((ming::List<int>{1, 2, 3}.par() == ming::ParallelList<int>{1, 2, 3}));
+            assert((ming::Set<int>{1, 2, 3}.par() == ming::ParallelSet<int>{1, 2, 3}));
+            assert((ming::Map<std::pair<int,int>>{{1,2}, {2,3}}.par() == ming::ParallelMap<std::pair<int, int>>{{1,2}, {2,3}}));
         }
-    }
-}
-
-void TestLazyContainers() {
-    Test {
-        using namespace ming::placeholders;
-        /* correctness */
-        TestBlock {
-            /* ming::LazyVector */
-            TestBlock {
-                using container = ming::LazyVector<int>;
-                container con = ming::range<container>(0, 10);
-                con.map(_ * 2).map(_ * 3).map(_ * 4);
-            }
-        }
-        /* performance */
     }
 }
 
@@ -469,6 +434,5 @@ int main()
     TestOverloadedOperator();
     TestContainers();
     TestParallelContainers();
-    TestLazyContainers();
     return 0;
 }

@@ -56,7 +56,7 @@ class Map<std::pair<K, V>>: public std::map<K, V>,
      * Parallelly
      */
     constexpr ParallelMap<value_type> par() {
-        return ParallelMap<value_type>(*this);
+        return ParallelMap<value_type>(base::begin(), base::end());
     }
 };
 
