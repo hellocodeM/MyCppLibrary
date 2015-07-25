@@ -2,6 +2,8 @@
 #define MING_CONTAINER_PARALLEL_ITERABLE_HPP
 
 #include <future>
+#include <vector>
+#include <unistd.h>     /* for sysconf */
 
 #include "operators.hpp"
 
@@ -33,11 +35,12 @@ class ParallelIterable {
     
     template <class Init, class Fn, class Pred>
     constexpr auto fold_if(Init&& init, Fn f, Pred pred) {
-        constexpr int thread_num = 4;
+        /* the thread_num depends on the number of CPU cores */
+        const size_t thread_num = sysconf(_SC_NPROCESSORS_ONLN);
         auto first = derived->begin();
         auto last = derived->end();
         int interval = std::distance(first, last) / thread_num;
-        std::future<Init> fs[thread_num];
+        std::vector<std::future<Init>> fs(thread_num);
 
         for (int i = 0; i < thread_num; i++) {
             auto start = std::next(first, interval*i);
@@ -83,11 +86,11 @@ class ParallelIterable {
 
     template <class Fn>
     void foreach(Fn f) {
-        constexpr int thread_num = 4;
+        const size_t thread_num = sysconf(_SC_NPROCESSORS_ONLN);
         auto first = derived->begin();
         auto last = derived->end();
         int interval = std::distance(first, last) / thread_num;
-        std::future<void> fs[4];
+        std::vector<std::future<void>> fs(thread_num);
 
         for (int i = 0; i < thread_num; i++) {
             auto start = std::next(first, interval * i);
