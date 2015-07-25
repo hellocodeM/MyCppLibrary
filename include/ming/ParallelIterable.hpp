@@ -6,6 +6,7 @@
 #include <unistd.h>     /* for sysconf */
 
 #include "operators.hpp"
+#include "placeholders.hpp"
 
 
 namespace ming {
@@ -33,8 +34,8 @@ class ParallelIterable {
     }
 
     
-    template <class Init, class Fn, class Pred>
-    constexpr auto fold_if(Init&& init, Fn f, Pred pred) {
+    template <class Init, class Fn, class Pred, class Combine>
+    auto fold_if(Init&& init, Fn f, Pred pred, Combine comb) const {
         /* the thread_num depends on the number of CPU cores */
         const size_t thread_num = sysconf(_SC_NPROCESSORS_ONLN);
         auto first = derived->begin();
@@ -56,32 +57,41 @@ class ParallelIterable {
         }
         Init res = init;
         for (auto&& i : fs)
-            res += i.get();
+            res = std::move(comb(res, i.get()));
         return res;
     }
 
     template <class Init, class Fn>
     constexpr auto fold(Init&& init, Fn f) {
-        return derived->fold_if(std::forward<Init>(init), f, [](auto&& x){ return true; });
+        return derived->fold_if(std::forward<Init>(init), f, [](auto&& x){ return true; }, f);
     }
 
 
     template<class Fn>
     constexpr auto map(Fn f) {
+        using namespace ming::placeholders;
         using item_type = decltype(f(head()));
         using container_type = typename Derived::template container<item_type>::type;
-        return derived->fold(container_type(), [f](auto&& init, auto&& item) {
+        return derived->fold_if(container_type(), [f](auto&& init, auto&& item) {
             init += f(std::forward<decltype(item)>(item));
             return std::move(init);
+        }, [](auto&& x) {
+            return true;
+        }, [](auto&& lhs, auto&& rhs) {
+            return lhs += rhs;
         });
     }
 
     template <class Pred>
     constexpr auto filter(Pred pred) {
+        using namespace ming::placeholders;
         return derived->fold_if(Derived(), [](auto&& init, auto&& item) {
             init += std::forward<decltype(item)>(item);
             return std::move(init);
-        }, pred);
+        }, pred, [](auto&& lhs, auto&& rhs) {
+            lhs += rhs;
+            return std::move(lhs);
+        });
     }
 
     template <class Fn>

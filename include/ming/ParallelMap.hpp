@@ -39,16 +39,17 @@ class ParallelMap<std::pair<K, V>>: public std::map<K, V>,
      */
     template <class Fn>
     constexpr auto map(Fn f) {
+        using namespace ming::placeholders;
         using result_type = decltype(f(iterable::head()));
         using container_type = std::conditional_t<
                                     ming::is_pair<result_type>::value, 
                                     ParallelMap<result_type>, 
                                     ParallelVector<result_type> 
                                 >;
-        return iterable::fold(container_type(), [f](auto&& init, auto&& elem) {
+        return iterable::fold_if(container_type(), [f](auto&& init, auto&& elem) {
                 init += f(std::forward<decltype(elem)>(elem));
                 return init;
-        });
+        }, [](auto&& x) { return true; }, _ + _);
     }
 
 };
