@@ -50,7 +50,7 @@ class ParallelIterable {
                 Init res = init;
                 for (auto i = start; i != end; ++i) {
                     if (pred(*i))
-                        res = f(std::forward<Init>(res), *i);
+                        res = std::move(f(std::forward<Init>(res), *i));
                 }
                 return res;
             });

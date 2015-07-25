@@ -42,7 +42,7 @@ class Iterable {
     constexpr auto fold_if(Init&& init, Fn f, Pred pred) {
         for (auto&& i: *derived) {
             if (pred(i))
-                init = f(std::forward<Init>(init), i);
+                init = std::move(f(std::forward<Init>(init), i));
         }
         return std::forward<Init>(init);
     }
