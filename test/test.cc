@@ -165,9 +165,9 @@ void TestLambda() {
             int x = 1;
             const int y = 1;
 
-            auto add1 = lambda(_ + 1);
-            auto addx = lambda(_ + x);
-            auto addy = lambda(_ + y);
+            auto add1 = Lambda(_ + 1);
+            auto addx = Lambda(_ + x);
+            auto addy = Lambda(_ + y);
 
             assert((add1(1) == 2));
             assert((add1(x) == 2));
@@ -179,26 +179,26 @@ void TestLambda() {
             assert((addy(x) == 2));
             assert((addy(y) == 2));
 
-            auto print = lambda(ming::print(_));
+            auto print = Lambda(ming::print(_));
             print("wow");
         }
 
         TestBlock {
             std::vector<int> vec = { 1, 2, 3 };
 
-            std::for_each(vec.begin(), vec.end(), lambda(_ + 1));
-            std::for_each(vec.begin(), vec.end(), lambda(_ += 1));
+            std::for_each(vec.begin(), vec.end(), Lambda(_ + 1));
+            std::for_each(vec.begin(), vec.end(), Lambda(_ += 1));
             assert((vec == std::vector<int>{ 2, 3, 4 }));
 
-            std::for_each(vec.begin(), vec.end(), lambda(_ * 1));
-            std::for_each(vec.begin(), vec.end(), lambda(_ *= 1));
+            std::for_each(vec.begin(), vec.end(), Lambda(_ * 1));
+            std::for_each(vec.begin(), vec.end(), Lambda(_ *= 1));
             assert((vec == std::vector<int>{ 2, 3, 4 }));
 
-            std::sort(vec.begin(), vec.end(), lambda2(_1 > _2));
+            std::sort(vec.begin(), vec.end(), Lambda2(_1 > _2));
             assert((vec == std::vector<int>{ 4, 3, 2}));
 
-            std::for_each(vec.begin(), vec.end(), lambda(ming::println(_)));
-            std::for_each(vec.begin(), vec.end(), lambda(printf("%d\n", _)));
+            std::for_each(vec.begin(), vec.end(), Lambda(ming::println(_)));
+            std::for_each(vec.begin(), vec.end(), Lambda(printf("%d\n", _)));
         }
 
     }
@@ -325,11 +325,11 @@ void TestContainerCase() {
     /* cascade map */
     assert((ming::range<Cont>(0, 100).map(_ * 2).map(_ * 2).map(_ * 2) == ming::range<Cont>(0, 800, 8)));
     /* cascade filter */
-    assert((ming::range<Cont>(0, 100).filter(lambda(_ % 2 == 0)).filter(lambda(_ % 3 == 0)) == ming::range<Cont>(0, 100, 6)));
+    assert((ming::range<Cont>(0, 100).filter(Lambda(_ % 2 == 0)).filter(Lambda(_ % 3 == 0)) == ming::range<Cont>(0, 100, 6)));
     /* cascade take */
     assert((ming::range<Cont>(0, 100).take(50).take(20).take(10) == ming::range<Cont>(0, 10)));
     /* compound */
-    assert((ming::range<Cont>(0, 100).filter(lambda(_ % 2 == 0)).map(_ / 2).fold(0, _ + _) == 1225));
+    assert((ming::range<Cont>(0, 100).filter(Lambda(_ % 2 == 0)).map(_ / 2).fold(0, _ + _) == 1225));
     /* head tail */
     assert((ming::range<Cont>(0, 100).tail().head() == 1));
 }
@@ -341,15 +341,15 @@ void TestContainerCaseMap() {
     Cont ans = { {1, 4}, {3, 8}, {5, 12} };
 
     /* map to another map */
-    assert((con.map(lambda(std::make_pair(_.first, _.second * 2))) == ans));
+    assert((con.map(Lambda(std::make_pair(_.first, _.second * 2))) == ans));
     /* map to a vector */
-    assert((con.map(lambda(_.second * 2)) == ming::Vector<int>{4, 8, 12}));
+    assert((con.map(Lambda(_.second * 2)) == ming::Vector<int>{4, 8, 12}));
     /* cascade map */
     auto convert1 = [](auto&& pair) { return std::make_pair(pair.first, pair.second * 2); };
     auto convert2 = [](auto&& pair) { return std::make_pair(pair.first, pair.second / 2); };
     assert((con.map(convert1).map(convert2) == con));
     /* cascade filter */
-    assert((con.filter(lambda(_.first != 1)).filter(lambda(_.first != 3)) == Cont{{5, 6}}));
+    assert((con.filter(Lambda(_.first != 1)).filter(Lambda(_.first != 3)) == Cont{{5, 6}}));
     /* cascade take */
     assert((con.take(3).take(2).take(1) == Cont{{1, 2}}));
     /* head tail */

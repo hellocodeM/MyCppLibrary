@@ -104,17 +104,17 @@ auto operator << (std::ostream& out, PlaceHolder x) {
  * 
  */
 
-#define lambda(expr) \
+#define Lambda(expr) \
     [&](auto&& _) {  \
         return expr;         \
     }
 
-#define lambda1(expr) \
+#define Lambda1(expr) \
     [&](auto&& _1) { \
         return expr; \
     }
 
-#define lambda2(expr) \
+#define Lambda2(expr) \
     [&](auto&& _1, auto&& _2) { \
         return expr; \
     }
