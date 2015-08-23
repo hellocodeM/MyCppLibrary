@@ -28,13 +28,6 @@ class Vector: public std::vector<T>, public Iterable<Vector<T>>{
     };
 
     /**
-     * Add element.
-     */
-    void add(const T& elem) {
-        base::push_back(elem);
-    }
-
-    /**
      * Parallelly
      */
     ming::ParallelVector<T> par() const {
