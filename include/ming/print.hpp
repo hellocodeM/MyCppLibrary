@@ -6,6 +6,7 @@
 #include <iostream>
 
 #include "has_iterator.hpp"
+#include "HasMethod.hpp"
 
 namespace ming {
 namespace IO {
@@ -26,6 +27,7 @@ namespace IO {
  * @desc: Print arbitrary object to stdout, with a line break. 
  */
 
+HAS_METHOD(begin);
 /**
  * Trivial.
  */
@@ -39,24 +41,13 @@ void print(const std::string& str) {
     std::cout << str;
 }
 
-
 /**
- * Print a object.
+ * Print a common object.
  */
 template <class T>
 auto print(const T& x) 
-    -> std::enable_if_t<!ming::has_iterator<T>::value, void> {
-    std::cout << x;
-}
-
-/**
- * Print a container with iterator.
- */
-template <class T>
-auto print(const T& x) 
-    -> std::enable_if_t<ming::has_iterator<T>::value, void> {
-    for (auto&& i : x)
-        print(std::forward<decltype(i)>(i)), print(" ");
+    -> std::enable_if_t<!has_begin<T>::value, void> {
+        std::cout << x;
 }
 
 /**
@@ -64,13 +55,26 @@ auto print(const T& x)
  */
 template <class K, class V>
 void print(const std::pair<K, V>& p) {
+    print("(");
     print(p.first);
-    print(":");
+    print(", ");
     print(p.second);
+    print(")");
+}
+
+
+/**
+ * Print a container with iterator.
+ */
+template <class T>
+auto print(const T& x) 
+    -> std::enable_if_t<has_begin<T>::value, void> {
+    for (auto&& i : x)
+        print(std::forward<decltype(i)>(i)), print(" ");
 }
 
 template <class T>
-void println(const T& item) {
+auto println(const T& item) {
     print(item);
     std::cout << std::endl;
 }
