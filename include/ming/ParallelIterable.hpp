@@ -37,7 +37,7 @@ class ParallelIterable {
     template <class Init, class Fn, class Pred, class Combine>
     auto fold_if(Init&& init, Fn f, Pred pred, Combine comb) const {
         /* the thread_num depends on the number of CPU cores */
-        const size_t thread_num = sysconf(_SC_NPROCESSORS_ONLN);
+        const size_t thread_num = std::thread::hardware_concurrency();
         auto first = derived->begin();
         auto last = derived->end();
         int interval = std::distance(first, last) / thread_num;
@@ -96,7 +96,7 @@ class ParallelIterable {
 
     template <class Fn>
     void foreach(Fn f) {
-        const size_t thread_num = sysconf(_SC_NPROCESSORS_ONLN);
+        const size_t thread_num = std::thread::hardware_concurrency();
         auto first = derived->begin();
         auto last = derived->end();
         int interval = std::distance(first, last) / thread_num;
