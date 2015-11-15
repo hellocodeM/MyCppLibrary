@@ -98,7 +98,6 @@ class Iterable {
     private:
     Derived* derived;
 };
-
 } /* end of namespace ming::container */
 
 using container::Iterable;

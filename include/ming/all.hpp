@@ -36,4 +36,7 @@
 /* operators */
 #include "operators.hpp"
 
+/* thread pool */
+#include "ThreadPool.hpp"
+
 #endif

@@ -6,26 +6,22 @@
 #include <ming/all.hpp>
 
 class Dog {
-    public:
-        Dog (const char* name): name_(name) {}
+public:
+    Dog(const char* name) : name_(name) {}
 
-        const std::string& name() const {
-            return name_;
-        }
+    const std::string& name() const { return name_; }
 
-        friend std::ostream& operator << (std::ostream& out,  const Dog& dog) {
-            out << dog.name();
-            return out;
-        }
+    friend std::ostream& operator<<(std::ostream& out, const Dog& dog) {
+        out << dog.name();
+        return out;
+    }
 
-    private:
-        std::string name_;
+private:
+    std::string name_;
 };
 
 struct Functor {
-    int operator() () {
-        return 1;
-    }
+    int operator()() { return 1; }
 };
 
 void TestExecutionTime() {
@@ -40,7 +36,7 @@ void TestPrint() {
         const std::vector<int> vec{1, 2, 3};
         ming::println("scooby doo");
         ming::println(1024);
-        ming::println(std::vector<int> {1, 2, 3});
+        ming::println(std::vector<int>{1, 2, 3});
         ming::println(vec);
         ming::println(std::make_pair(1, 2));
     }
@@ -51,7 +47,7 @@ void TestPrintf() {
         ming::printf("object: %\n", Dog("schooby doo"));
         ming::printf("name: %\n", "schooby doo");
         ming::printf("age: %\n", 2);
-        ming::printf("friends: %\n", std::vector<const char*>{ "tom", "kitty", "lilly"});
+        ming::printf("friends: %\n", std::vector<const char*>{"tom", "kitty", "lilly"});
     }
 }
 
@@ -59,14 +55,14 @@ void TestHasIterator() {
     Test {
         assert((ming::has_iterator<std::vector<int>>::value == true));
         assert((ming::has_iterator<int>::value == false));
-    } 
+    }
 }
 
 void TestIsFunctor() {
     Test {
         assert((ming::is_functor<Functor>::value));
         assert((ming::is_functor<Dog>::value == false));
-    } 
+    }
 }
 
 HAS_INNERTYPE(value_type);
@@ -77,7 +73,7 @@ void TestHasInnerType() {
         assert(has_value_type<std::vector<int>>::value);
         assert(has_value_type<int>::value == false);
         assert(has_const_iterator<std::vector<int>>::value);
-    } 
+    }
 }
 
 HAS_METHOD(size);
@@ -92,12 +88,17 @@ void TestHasMethod() {
         static_assert(has_name<std::vector<int>>::value == false, "vector<int>::size");
         /* overloaded member function */
         static_assert(has_push_back<std::vector<int>, int>::value, "vector<int>::push_back(int)");
-        static_assert(has_push_back<std::vector<int>, const int&>::value, "vector<int>::push_back(const int&)");
-        static_assert(has_push_back<std::vector<int>, int&&>::value, "vector<int>::push_back(int&&)");
-        static_assert(has_push_back<std::vector<int>, double>::value, "vector<int>::push_back(double)");
-        static_assert(has_push_back<std::vector<int>, short>::value, "vector<int>::push_back(short)");
-        static_assert(has_push_back<std::vector<int>, Dog>::value == false, "vector<int>::push_back(Dog)");
-    } 
+        static_assert(has_push_back<std::vector<int>, const int&>::value,
+                      "vector<int>::push_back(const int&)");
+        static_assert(has_push_back<std::vector<int>, int&&>::value,
+                      "vector<int>::push_back(int&&)");
+        static_assert(has_push_back<std::vector<int>, double>::value,
+                      "vector<int>::push_back(double)");
+        static_assert(has_push_back<std::vector<int>, short>::value,
+                      "vector<int>::push_back(short)");
+        static_assert(has_push_back<std::vector<int>, Dog>::value == false,
+                      "vector<int>::push_back(Dog)");
+    }
 }
 
 void TestLambda() {
@@ -132,8 +133,8 @@ void TestLambda() {
 
         /* functionality test  */
         TestBlock {
-            std::vector<int> vec = { 1, 2, 3 };
-            const std::vector<int> ans = { 2, 3, 4 };
+            std::vector<int> vec = {1, 2, 3};
+            const std::vector<int> ans = {2, 3, 4};
 
             std::for_each(vec.begin(), vec.end(), _1 += 1);
             assert(vec == ans);
@@ -145,17 +146,17 @@ void TestLambda() {
             assert(vec == ans);
 
             std::for_each(vec.begin(), vec.end(), _1 -= 1);
-            assert((vec == std::vector<int>{ 1, 2, 3} ));
+            assert((vec == std::vector<int>{1, 2, 3}));
 
             std::for_each(vec.begin(), vec.end(), std::cout << _1);
             std::for_each(vec.begin(), vec.end(), _1 %= 4);
-            assert((vec == std::vector<int>{ 1, 2, 3 } ));
+            assert((vec == std::vector<int>{1, 2, 3}));
 
             std::for_each(vec.begin(), vec.end(), _1 <<= 1);
-            assert((vec == std::vector<int>{ 2, 4, 6 } ));
+            assert((vec == std::vector<int>{2, 4, 6}));
 
             std::for_each(vec.begin(), vec.end(), _1 &= 1);
-            assert((vec == std::vector<int>{ 0, 0, 0 }));
+            assert((vec == std::vector<int>{0, 0, 0}));
 
             std::for_each(ans.begin(), ans.end(), std::cout << _1);
         }
@@ -184,25 +185,23 @@ void TestLambda() {
         }
 
         TestBlock {
-            std::vector<int> vec = { 1, 2, 3 };
+            std::vector<int> vec = {1, 2, 3};
 
             std::for_each(vec.begin(), vec.end(), Lambda(_ + 1));
             std::for_each(vec.begin(), vec.end(), Lambda(_ += 1));
-            assert((vec == std::vector<int>{ 2, 3, 4 }));
+            assert((vec == std::vector<int>{2, 3, 4}));
 
             std::for_each(vec.begin(), vec.end(), Lambda(_ * 1));
             std::for_each(vec.begin(), vec.end(), Lambda(_ *= 1));
-            assert((vec == std::vector<int>{ 2, 3, 4 }));
+            assert((vec == std::vector<int>{2, 3, 4}));
 
             std::sort(vec.begin(), vec.end(), Lambda2(_1 > _2));
-            assert((vec == std::vector<int>{ 4, 3, 2}));
+            assert((vec == std::vector<int>{4, 3, 2}));
 
             std::for_each(vec.begin(), vec.end(), Lambda(ming::println(_)));
             std::for_each(vec.begin(), vec.end(), Lambda(printf("%d\n", _)));
         }
-
     }
-
 }
 
 void TestCascadeFunction() {
@@ -210,19 +209,19 @@ void TestCascadeFunction() {
         using namespace ming::placeholders;
         constexpr size_t size = 12345678;
         TestBlock {
-            ming::Vector<int> vec = { 1, 2, 3};
+            ming::Vector<int> vec = {1, 2, 3};
 
-            vec.foreach(_1 += 1);
-            assert((vec == ming::Vector<int>{ 2, 3, 4 }));
+            vec.foreach (_1 += 1);
+            assert((vec == ming::Vector<int>{2, 3, 4}));
 
-            assert((vec.map(_1 - 1) == ming::Vector<int>{ 1, 2, 3 }));
+            assert((vec.map(_1 - 1) == ming::Vector<int>{1, 2, 3}));
 
             assert((vec.fold(0, _1 + _2) == 9));
 
-            assert((vec.filter(_1 < 4) == ming::Vector<int>{ 2, 3 }));
+            assert((vec.filter(_1 < 4) == ming::Vector<int>{2, 3}));
 
-            assert((vec.take(2) == ming::Vector<int>{ 2, 3 }));
-            assert((vec.take(100) == ming::Vector<int>{ 2, 3, 4 }));
+            assert((vec.take(2) == ming::Vector<int>{2, 3}));
+            assert((vec.take(100) == ming::Vector<int>{2, 3, 4}));
         }
         /* performance test */
     }
@@ -268,7 +267,6 @@ void TestOverloadedOperatorCase() {
     assert((Container{1} + Container{2} == Container{1, 2}));
 }
 
-
 void TestOverloadedOperator() {
     Test {
         /* ming::Vector */
@@ -293,23 +291,23 @@ void TestOverloadedOperator() {
             /* operator += */
             /* container and element */
             con1 += std::make_pair(5, 6);
-            assert((con1 == Container{{1,2}, {3,4}, {5,6}}));
-            con1 = {{1,2}, {3,4}};
+            assert((con1 == Container{{1, 2}, {3, 4}, {5, 6}}));
+            con1 = {{1, 2}, {3, 4}};
             /* contaienr and container */
             con1 += con2;
-            assert((con1 == Container{{1,2}, {3,4}, {5,6}, {7,8}}));
+            assert((con1 == Container{{1, 2}, {3, 4}, {5, 6}, {7, 8}}));
 
             /* oeprator + */
-            con1 = {{1,2}, {3,4}};
+            con1 = {{1, 2}, {3, 4}};
             /* container and element */
-            assert((con1 + std::make_pair(5, 6) == Container{{1,2}, {3,4}, {5,6}}));
-            assert((std::make_pair(5, 6) + con1 == Container{{1,2}, {3,4}, {5,6}}));
+            assert((con1 + std::make_pair(5, 6) == Container{{1, 2}, {3, 4}, {5, 6}}));
+            assert((std::make_pair(5, 6) + con1 == Container{{1, 2}, {3, 4}, {5, 6}}));
             /* container and contaienr */
-            assert((con1 + con2 == Container{{1,2}, {3,4}, {5,6}, {7,8}}));
-            assert((con2 + con1 == Container{{1,2}, {3,4}, {5,6}, {7,8}}));
+            assert((con1 + con2 == Container{{1, 2}, {3, 4}, {5, 6}, {7, 8}}));
+            assert((con2 + con1 == Container{{1, 2}, {3, 4}, {5, 6}, {7, 8}}));
             /* rvalue */
-            assert((Container{{1,2}} + std::make_pair(3,4) == Container{{1,2}, {3,4}}));
-            assert((Container{{1,2}} + Container{{3,4}} == Container{{1,2}, {3,4}}));
+            assert((Container{{1, 2}} + std::make_pair(3, 4) == Container{{1, 2}, {3, 4}}));
+            assert((Container{{1, 2}} + Container{{3, 4}} == Container{{1, 2}, {3, 4}}));
         }
     }
 }
@@ -323,22 +321,24 @@ void TestContainerCase() {
     assert((ming::range<Cont>(0, 100).take(50) == ming::range<Cont>(0, 50)));
     assert((ming::range<Cont>(0, 100).fold(0, _ + _) == 4950));
     /* cascade map */
-    assert((ming::range<Cont>(0, 100).map(_ * 2).map(_ * 2).map(_ * 2) == ming::range<Cont>(0, 800, 8)));
+    assert((ming::range<Cont>(0, 100).map(_ * 2).map(_ * 2).map(_ * 2) ==
+            ming::range<Cont>(0, 800, 8)));
     /* cascade filter */
-    assert((ming::range<Cont>(0, 100).filter(Lambda(_ % 2 == 0)).filter(Lambda(_ % 3 == 0)) == ming::range<Cont>(0, 100, 6)));
+    assert((ming::range<Cont>(0, 100).filter(Lambda(_ % 2 == 0)).filter(Lambda(_ % 3 == 0)) ==
+            ming::range<Cont>(0, 100, 6)));
     /* cascade take */
     assert((ming::range<Cont>(0, 100).take(50).take(20).take(10) == ming::range<Cont>(0, 10)));
     /* compound */
-    assert((ming::range<Cont>(0, 100).filter(Lambda(_ % 2 == 0)).map(_ / 2).fold(0, _ + _) == 1225));
+    assert(
+        (ming::range<Cont>(0, 100).filter(Lambda(_ % 2 == 0)).map(_ / 2).fold(0, _ + _) == 1225));
     /* head tail */
     assert((ming::range<Cont>(0, 100).tail().head() == 1));
 }
 
 template <class Cont>
 void TestContainerCaseMap() {
-
-    Cont con = { { 1, 2}, { 3, 4}, { 5, 6 } };
-    Cont ans = { {1, 4}, {3, 8}, {5, 12} };
+    Cont con = {{1, 2}, {3, 4}, {5, 6}};
+    Cont ans = {{1, 4}, {3, 8}, {5, 12}};
 
     /* map to another map */
     assert((con.map(Lambda(std::make_pair(_.first, _.second * 2))) == ans));
@@ -357,7 +357,7 @@ void TestContainerCaseMap() {
 }
 
 void TestContainers() {
-    Test { 
+    Test {
         using namespace ming::placeholders;
         constexpr size_t cont_size = 100;
         /* test for ming::Vector */
@@ -386,7 +386,7 @@ void TestContainers() {
 void TestParallelContainers() {
     Test {
         using namespace ming::placeholders;
-        
+
         /* correctness */
 
         TestBlock {
@@ -414,13 +414,26 @@ void TestParallelContainers() {
             assert((ming::Vector<int>{1, 2, 3}.par() == ming::ParallelVector<int>{1, 2, 3}));
             assert((ming::List<int>{1, 2, 3}.par() == ming::ParallelList<int>{1, 2, 3}));
             assert((ming::Set<int>{1, 2, 3}.par() == ming::ParallelSet<int>{1, 2, 3}));
-            assert((ming::Map<std::pair<int,int>>{{1,2}, {2,3}}.par() == ming::ParallelMap<std::pair<int, int>>{{1,2}, {2,3}}));
+            assert((ming::Map<std::pair<int, int>>{{1, 2}, {2, 3}}.par() ==
+                    ming::ParallelMap<std::pair<int, int>>{{1, 2}, {2, 3}}));
         }
     }
 }
 
-int main()
-{
+void TestThreadPool() {
+    Test {
+        ming::ThreadPool pool;
+        for (int i = 0; i < 1000; i++) {
+            pool.Submit([] {
+                using namespace std::chrono_literals;
+                std::this_thread::sleep_for(10ms);
+            });
+        }
+        pool.Wait();
+    }
+}
+
+int main() {
     TestExecutionTime();
     TestPrint();
     TestPrintf();
@@ -434,5 +447,6 @@ int main()
     TestOverloadedOperator();
     TestContainers();
     TestParallelContainers();
+    TestThreadPool();
     return 0;
 }
